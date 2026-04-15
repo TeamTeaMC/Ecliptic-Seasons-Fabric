@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "eclipticseasons",
   "version": "${version}",
-  "name": "Ecliptic Seasons",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Ecliptic Seasons: Fabricated",
+  "description": "A native, lightweight rewrite of Ecliptic Seasons for Fabric, delivering a high-performance 24-solar-term engine optimized for Voxy and shader-driven environments.",
   "authors": [
     "joe_vettek(jianzoushihu)",
     "Sam_Chai",
@@ -11,7 +11,7 @@
   ],
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/ecliptic-seasons",
-    "sources": "https://github.com/TeamTeaMC/Ecliptic-Seasons"
+    "sources": "https://github.com/TeamTeaMC/Ecliptic-Seasons-Fabricated"
   },
   "license": "Code licensed under BSD-3-Clause, resources under CC BY-NC-SA 4.0, disc Snowless Homeland used under special authorization from Beishanwei & Orangesoda.",
   "icon": "iconall.png",
