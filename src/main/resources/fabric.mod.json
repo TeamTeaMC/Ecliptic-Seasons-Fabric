@@ -3,7 +3,7 @@
   "id": "eclipticseasons",
   "version": "${version}",
   "name": "Ecliptic Seasons: Fabricated",
-  "description": "A native, lightweight rewrite of Ecliptic Seasons for Fabric, delivering a high-performance 24-solar-term engine optimized for Voxy and shader-driven environments.",
+  "description": "A native, lightweight rewrite of Ecliptic Seasons for Fabric, delivering a high-performance seasonal environments.",
   "authors": [
     "joe_vettek(jianzoushihu)",
     "Sam_Chai",
