@@ -443,6 +443,7 @@ public class BiomeClimateManager {
         // mappedRegistry.bindTags(new TagLoader.LoadResult<>(Registries.BIOME, biomeMap));
         {
             biomeRegistry.frozen = false;
+            biomeRegistry.allTags = MappedRegistry.TagSet.unbound();
             biomeRegistry.bindTags(biomeMap);
             biomeRegistry.freeze();
         }

@@ -1,6 +1,8 @@
 accessWidener v1 official
 
 accessible field net/minecraft/core/MappedRegistry frozen Z
+accessible class net/minecraft/core/MappedRegistry$TagSet
+accessible field net/minecraft/core/MappedRegistry allTags Lnet/minecraft/core/MappedRegistry$TagSet;
 
 # --- Entities & AI Goals ---
 accessible class net/minecraft/world/entity/animal/bee/Bee$BeePollinateGoal
