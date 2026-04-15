@@ -42,22 +42,23 @@ public class EclipticSeasonsClient implements ClientModInitializer {
         ClientSetup.onClientEvent();
         SimpleNetworkHandlerClient.initClient();
 
-        ClientCommandRegistrationCallback.EVENT.register(ClientEventHandler::onRegisterClientCommandsEvent);
+
+        // ClientCommandRegistrationCallback.EVENT.register(ClientEventHandler::onRegisterClientCommandsEvent);
 
         ModelLoadingPlugin.register(new ClientSetup.ModelImpl());
     }
 
     private void registerEvent() {
-        // TODO: Client TAG Reload
-        // ClientTagsLoader.TAGS_LOADED.register((server, resourceManager, success) -> {
-        //     if (success) {
-        //         AllListener.onTagsUpdatedEvent(TagsUpdatedEvent.builder()
-        //                 .lookupProvider(server.registryAccess())
-        //                 .integratedServer(server instanceof DedicatedServer)
-        //                 .updateCause(TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
-        //                 .build());
-        //     }
-        // });
+        ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
+            TagsUpdatedEvent tagsUpdatedEvent = TagsUpdatedEvent.builder()
+                    .lookupProvider(listener.registryAccess())
+                    .integratedServer(Minecraft.getInstance().isLocalServer())
+                    .updateCause(TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED)
+                    .build();
+            AllListener.onTagsUpdatedEventEarly(tagsUpdatedEvent);
+            AllListener.onTagsUpdatedEvent(tagsUpdatedEvent);
+            ClientEventHandler.onTagsUpdatedEvent(tagsUpdatedEvent);
+        });
 
         ClientTickEvents.END_LEVEL_TICK.register(AllListener::onLevelTick);
 
@@ -78,16 +79,7 @@ public class EclipticSeasonsClient implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientEventHandler::onPlayerExit);
         ClientPlayConnectionEvents.JOIN.register(ClientEventHandler::onLoggingIn);
 
-        ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
-            TagsUpdatedEvent tagsUpdatedEvent = TagsUpdatedEvent.builder()
-                    .lookupProvider(listener.registryAccess())
-                    .integratedServer(Minecraft.getInstance().isLocalServer())
-                    .updateCause(TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED)
-                    .build();
-            AllListener.onTagsUpdatedEventEarly(tagsUpdatedEvent);
-            AllListener.onTagsUpdatedEvent(tagsUpdatedEvent);
-            ClientEventHandler.onTagsUpdatedEvent(tagsUpdatedEvent);
-        });
+
 
     }
 }

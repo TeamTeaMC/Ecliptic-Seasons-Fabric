@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.animal;
+package com.teamtea.eclipticseasons.client.mixin.client.animal;
 
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

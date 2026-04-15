@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.block;
+package com.teamtea.eclipticseasons.client.mixin.client.block;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

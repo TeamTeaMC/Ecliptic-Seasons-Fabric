@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.chunk;
+package com.teamtea.eclipticseasons.client.mixin.client.chunk;
 
 
 import com.teamtea.eclipticseasons.EclipticSeasons;
@@ -7,7 +7,6 @@ import com.teamtea.eclipticseasons.api.misc.client.IMapSlice;
 import com.teamtea.eclipticseasons.client.core.context.ExtraRendererContext;
 import com.teamtea.eclipticseasons.common.core.map.*;
 import com.teamtea.eclipticseasons.common.registry.AttachmentRegistry;
-import it.unimi.dsi.fastutil.longs.Long2ObjectFunction;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.chunk.RenderSectionRegion;
 import net.minecraft.client.renderer.chunk.SectionCopy;

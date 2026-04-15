@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.model;
+package com.teamtea.eclipticseasons.client.mixin.client.model;
 
 
 import com.teamtea.eclipticseasons.api.misc.client.ISpriteChecker;

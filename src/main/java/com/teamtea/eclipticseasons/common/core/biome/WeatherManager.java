@@ -10,6 +10,7 @@ import com.teamtea.eclipticseasons.api.data.weather.special_effect.WeatherEffect
 import com.teamtea.eclipticseasons.api.event.BeforeCheckSnowStatusEvent;
 import com.teamtea.eclipticseasons.api.misc.ITranslatable;
 import com.teamtea.eclipticseasons.api.util.SolarUtil;
+import com.teamtea.eclipticseasons.common.advancement.SolarTermsRecord;
 import com.teamtea.eclipticseasons.common.hook.ESEventHook;
 import com.teamtea.eclipticseasons.common.misc.HeatStrokeTicker;
 import com.teamtea.eclipticseasons.common.network.message.UpdateTempChangeMessage;
@@ -54,6 +55,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.WeatherCheck;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class WeatherManager {
@@ -484,7 +486,7 @@ public class WeatherManager {
         if (MapChecker.isValidDimension(level)
                 && level.getRandom().nextInt(150) == 0) {
 
-            HeatStrokeTicker capability = AttachmentRegistry.HEAT_STROKE_TICKER.get(player);
+            HeatStrokeTicker capability = player.getAttachedOrCreate(AttachmentRegistry.HEAT_STROKE_TICKER);
             capability.tickPlayer(player, level);
         }
     }
@@ -731,7 +733,7 @@ public class WeatherManager {
     public static void tickPlayerForSeasonCheck(ServerPlayer serverPlayer, SolarTerm st) {
         // if (level.getGameTime() % 200 == 0)
         {
-            var solarTermsRecordCa = AttachmentRegistry.SOLAR_TERMS_RECORD.get(serverPlayer);
+            var solarTermsRecordCa = serverPlayer.getAttachedOrCreate(AttachmentRegistry.SOLAR_TERMS_RECORD);
 
             // int timeInTerm = EclipticSeasonsApi.getInstance().getTimeInTerm(level);
             // if (timeInTerm != 0) return;

@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin;
+package com.teamtea.eclipticseasons.client.mixin.client;
 
 
 import net.minecraft.world.level.Level;

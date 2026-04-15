@@ -4,17 +4,9 @@ import com.teamtea.eclipticseasons.EclipticSeasons;
 import com.teamtea.eclipticseasons.common.advancement.SolarTermsRecord;
 import com.teamtea.eclipticseasons.common.core.map.BiomeHolder;
 import com.teamtea.eclipticseasons.common.misc.HeatStrokeTicker;
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.world.entity.player.Player;
-import org.jspecify.annotations.NonNull;
-import org.ladysnake.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
-import org.ladysnake.cca.api.v3.chunk.ChunkComponentInitializer;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistryV3;
-import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
-import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 
 public class AttachmentRegistry {
 

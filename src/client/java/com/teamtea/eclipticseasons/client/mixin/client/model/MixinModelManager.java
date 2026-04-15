@@ -1,9 +1,8 @@
-package com.teamtea.eclipticseasons.client.mixin.model;
+package com.teamtea.eclipticseasons.client.mixin.client.model;
 
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.teamtea.eclipticseasons.client.ClientEventHandler;
 import com.teamtea.eclipticseasons.client.ClientSetup;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.ModelBakery;

@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.biome;
+package com.teamtea.eclipticseasons.client.mixin.client.biome;
 
 
 import com.teamtea.eclipticseasons.api.data.client.BiomeColor;

@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.sound;
+package com.teamtea.eclipticseasons.client.mixin.client.sound;
 
 import net.minecraft.client.sounds.MusicManager;
 import org.spongepowered.asm.mixin.Mixin;

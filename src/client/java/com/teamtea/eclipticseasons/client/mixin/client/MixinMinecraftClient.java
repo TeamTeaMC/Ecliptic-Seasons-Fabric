@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin;
+package com.teamtea.eclipticseasons.client.mixin.client;
 
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;

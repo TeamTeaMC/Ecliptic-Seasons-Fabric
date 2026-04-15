@@ -1,4 +1,4 @@
-package com.teamtea.eclipticseasons.client.mixin.model;
+package com.teamtea.eclipticseasons.client.mixin.client.model;
 
 
 import com.teamtea.eclipticseasons.client.model.MyResolver;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin(ModelBakery.class)
-public abstract class MixinModelBakery {
+public abstract class MixinModelBakery2 {
 
 
     @Inject(at = {@At(value = "TAIL")}, method = {"<init>"})
