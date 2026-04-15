@@ -29,6 +29,7 @@
     "common.level.MixinLevelReader",
     "common.level.MixinServerLevel",
     "common.loot.MixinWeatherCheck",
+    "common.server.MixinReloadableServerResources",
     "common.worldgen.MixinSurfaceSystem",
     "data.RegistrySetBuilderMixin",
     "game.MixinBee_BeePollinateGoal",

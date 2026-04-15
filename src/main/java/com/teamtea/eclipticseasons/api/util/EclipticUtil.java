@@ -144,7 +144,7 @@ public class EclipticUtil {
     }
 
     public static boolean canSnowyBlockInteract() {
-        return CommonConfig.isSnowInWorld();
+        return CommonConfig.isSnowInWorld()&&false;
     }
 
     public static EclipticSeasonsApi INSTANCE;

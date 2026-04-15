@@ -26,6 +26,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jspecify.annotations.Nullable;
 
@@ -50,9 +51,11 @@ public class VoxyTool {
                     .offset(i & 15, (i >> 8 & 15), i >> 4 & 15);
 
             Level level = ClientCon.getUseLevel();
+            LevelChunk chunk = null;
             if (section instanceof IVoxyLevelProvider iVoxyLevelProvider) {
-                Level levelBind = iVoxyLevelProvider.getLevelBind();
+                Level levelBind = iVoxyLevelProvider.getLevelBind1();
                 if (levelBind != null) level = levelBind;
+                chunk = iVoxyLevelProvider.getLevelBind();
             }
             if (level != null) {
                 if (MapChecker.isLoaded(level, section.x, section.z)) {
@@ -60,26 +63,42 @@ public class VoxyTool {
                             state, offset)) {
                         blockId = maxBlockId - blockId;
                     }
-                } else if (lightSupplier instanceof IVoxyAboveLightingSupplier supplier) {
-                    byte supply = supplier.supply(i & 15, (i >> 8 & 15) + 1, i >> 4 & 15);
-                    int skyLight = (supply & 0xFF) & 0x0F;
-                    if (skyLight > 9 &&
-                            (!CommonConfig.Snow.notSnowyNearGlowingBlock.get() ||
-                                    (((supply & 0xFF) >> 4) & 0x0F) < CommonConfig.Snow.notSnowyNearGlowingBlockLevel.getAsInt())) {
-                        BlockState aboveState = supplier.getBlockState(i & 15, (i >> 8 & 15) + 1, i >> 4 & 15);
+                } else {
+                    boolean aboveEmpty = false;
+                    BlockState stateAbove = null;
+                    if (chunk != null) {
+                        int y = i >> 8 & 15;
+                        BlockPos blockPos = new BlockPos(i & 15, y + 1, i >> 4 & 15);
+                        if (MapChecker.getHeightSafe(level, blockPos) >=
+                                section.y * 16 + y) {
+                            aboveEmpty = true;
+                            stateAbove = chunk.getBlockState(blockPos);
+                        }
+
+                    } else if (lightSupplier instanceof IVoxyAboveLightingSupplier supplier) {
+                        byte supply = supplier.supply(i & 15, (i >> 8 & 15) + 1, i >> 4 & 15);
+                        int skyLight = (supply & 0xFF) & 0x0F;
+                        if (skyLight > 9 &&
+                                (!CommonConfig.Snow.notSnowyNearGlowingBlock.get() ||
+                                        (((supply & 0xFF) >> 4) & 0x0F) < CommonConfig.Snow.notSnowyNearGlowingBlockLevel.getAsInt())) {
+                            aboveEmpty = true;
+                            stateAbove = supplier.getBlockState(i & 15, (i >> 8 & 15) + 1, i >> 4 & 15);
+                        }
+                    }
+
+                 if (aboveEmpty && stateAbove != null) {
                         boolean isLight = true;
                         int flag = MapChecker.getDefaultBlockTypeFlag(state);
                         if (MapChecker.leaveLike(flag)) {
-
-                            boolean specialLeaves = aboveState.is(state.getBlock())
-                                    && (Heightmap.Types.MOTION_BLOCKING_NO_LEAVES.isOpaque().test(aboveState) ||
-                                    MapChecker.extraSnowPassable(aboveState));
+                            boolean specialLeaves = stateAbove.is(state.getBlock())
+                                    && (Heightmap.Types.MOTION_BLOCKING_NO_LEAVES.isOpaque().test(stateAbove) ||
+                                    MapChecker.extraSnowPassable(stateAbove));
                             if (specialLeaves) {
                                 isLight = CommonConfig.Snow.snowyTree.get();
                             }
                         } else {
                             if (MapChecker.extraSnowPassable(state)) {
-                                isLight = !MapChecker.extraSnowPassable(aboveState);
+                                isLight = !MapChecker.extraSnowPassable(stateAbove);
                             }
                         }
                         if (isLight) {

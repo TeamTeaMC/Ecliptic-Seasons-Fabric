@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -45,8 +46,6 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-
-import static com.teamtea.eclipticseasons.client.core.ExtraModelManager.models;
 
 
 public class ExtraRenderDispatcher {
@@ -378,14 +377,17 @@ public class ExtraRenderDispatcher {
             // }
         }
 
-        if (parts != null) {
-            if (shouldReplace) {
-                parts.clear();
-            }
-            if (first != null)
-                first.collectParts(random, parts);
-            if (second != null)
-                second.collectParts(random, parts);
+        // if (parts != null) {
+        //     if (shouldReplace) {
+        //         parts.clear();
+        //     }
+        //     if (first != null)
+        //         first.collectParts(random, parts);
+        //     if (second != null)
+        //         second.collectParts(random, parts);
+        // }
+        if(second!=null){
+            first= new OverrideBlockStateModel(first, second);
         }
         return isSnowy ? first : null;
     }
@@ -796,5 +798,31 @@ public class ExtraRenderDispatcher {
             }
         }
         return isSnowy;
+    }
+
+    public static class OverrideBlockStateModel implements BlockStateModel {
+        private final BlockStateModel finalFirst;
+        private final BlockStateModel finalSecond;
+
+        public OverrideBlockStateModel(BlockStateModel finalFirst, BlockStateModel finalSecond) {
+            this.finalFirst = finalFirst;
+            this.finalSecond = finalSecond;
+        }
+
+        @Override
+        public void collectParts(@NonNull RandomSource random, @NonNull List<BlockStateModelPart> output) {
+            finalFirst.collectParts(random, output);
+            finalSecond.collectParts(random,output);
+        }
+
+        @Override
+        public Material.@NonNull Baked particleMaterial() {
+            return finalFirst.particleMaterial();
+        }
+
+        @Override
+        public @BakedQuad.MaterialFlags int materialFlags() {
+            return finalFirst.materialFlags();
+        }
     }
 }

@@ -36,8 +36,8 @@ public class ExtraRendererContext {
 
     public static TriState getModelForAmbientOcclusion(Object context, BlockState state, Object modelData, ChunkSectionLayer renderType) {
         ExtraRendererContext rendererHolder = IExtraRendererContextOwner.of(context);
-        if (rendererHolder.getExtraModel() instanceof ISnowyReplaceModel snowyBakedModelWrapper) {
-            if (snowyBakedModelWrapper.getBindBlockType() == MapChecker.FLAG_CUSTOM_AO) {
+        if (rendererHolder.getExtraModel() != null) {
+            if (MapChecker.getDefaultBlockTypeFlag(state) == MapChecker.FLAG_CUSTOM_AO) {
                 return TriState.TRUE;
             }
         }

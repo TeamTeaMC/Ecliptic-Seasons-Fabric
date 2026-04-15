@@ -2,6 +2,7 @@ package com.teamtea.eclipticseasons.client.mixin.compat.voxy;
 
 import com.teamtea.eclipticseasons.compat.voxy.helper.IVoxyLevelProvider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -12,15 +13,15 @@ import java.lang.ref.WeakReference;
 public abstract class MixinIngestSection implements IVoxyLevelProvider {
 
     @Unique
-    WeakReference<Level> eclipticseasons$level = new WeakReference<>(null);
+    LevelChunk eclipticseasons$level;
 
     @Override
-    public void setLevelReference(Level levelReference) {
-        this.eclipticseasons$level = new WeakReference<>(levelReference);
+    public void setLevelReference(LevelChunk levelReference) {
+        this.eclipticseasons$level = levelReference;
     }
 
     @Override
-    public WeakReference<Level> getLevelReference() {
-        return eclipticseasons$level;
+    public WeakReference<LevelChunk> getLevelReference() {
+        return new WeakReference<>(eclipticseasons$level);
     }
 }

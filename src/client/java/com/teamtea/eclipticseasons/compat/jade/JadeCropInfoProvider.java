@@ -34,7 +34,7 @@ public class JadeCropInfoProvider implements IBlockComponentProvider {
                    tooltip.addAll(components);
 
                } else if (config.get(JadeCompact.SHIFT_HINT)) {
-                   tooltip.add(Component.translatable("hint.jade.plugin_eclipticseasons.crop.show", Minecraft.getInstance().options.keyShift.getName()));
+                   tooltip.add(Component.translatable("hint.jade.plugin_eclipticseasons.crop.show", Minecraft.getInstance().options.keyShift.getDefaultKey().getDisplayName()));
                }
            }
        }

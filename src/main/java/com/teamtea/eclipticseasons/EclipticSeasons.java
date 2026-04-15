@@ -22,10 +22,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.PlayerChunkSender;
-import net.minecraft.server.players.PlayerList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
@@ -140,6 +139,7 @@ public class EclipticSeasons implements ModInitializer {
         SoundEventsRegistry.init();
         ModContents.onNewRegistry();
         IceOrSnowCauldronBlock.init();
+        EffectRegistry.init();
 
         CommandRegistrationCallback.EVENT.register(CommandHandler::onRegisterCommands);
 
@@ -175,15 +175,13 @@ public class EclipticSeasons implements ModInitializer {
     private void registerEvent() {
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             if (success) {
-                TagsUpdatedEvent tagsUpdatedEvent = TagsUpdatedEvent.builder()
-                        .lookupProvider(server.registryAccess())
-                        .integratedServer(server instanceof DedicatedServer)
-                        .updateCause(TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
-                        .build();
-                AllListener.onTagsUpdatedEventEarly(tagsUpdatedEvent);
-                AllListener.onTagsUpdatedEvent(tagsUpdatedEvent);
+                fireTagUpdated(server);
             }
         });
+        ServerLifecycleEvents.SERVER_STARTED.register(EclipticSeasons::fireTagUpdated);
+
+        // ESEventHook.TAG_UPDATED.register(AllListener::onTagsUpdatedEventEarly);
+        // ESEventHook.TAG_UPDATED.register(AllListener::onTagsUpdatedEvent);
 
         ServerLifecycleEvents.SERVER_STARTING.register(AllListener::onServerAboutToStartEvent);
         ServerLifecycleEvents.SERVER_STOPPING.register(AllListener::onServerStoppingEvent);
@@ -223,5 +221,15 @@ public class EclipticSeasons implements ModInitializer {
         // cca
         ChunkSyncCallback.EVENT.register((player, chunk) ->
                 AllListener.onChunkWatch(player.level(), chunk, chunk.getPos(), player));
+    }
+
+    private static void fireTagUpdated(MinecraftServer server) {
+        TagsUpdatedEvent tagsUpdatedEvent = TagsUpdatedEvent.builder()
+                .lookupProvider(server.registryAccess())
+                .integratedServer(server instanceof DedicatedServer)
+                .updateCause(TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
+                .build();
+        AllListener.onTagsUpdatedEventEarly(tagsUpdatedEvent);
+        AllListener.onTagsUpdatedEvent(tagsUpdatedEvent);
     }
 }

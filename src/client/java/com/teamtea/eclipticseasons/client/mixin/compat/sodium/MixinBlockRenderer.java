@@ -94,11 +94,15 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
             Operation<Void> original
     ) {
 
-        if (eclipticseasons$snowModel != null)
-            eclipticseasons$cancelDowngradedPass = true;
 
         // if (!eclipticseasons$shouldReplaceOriginalGrassModel || eclipticseasons$snowModel == null)
-        original.call(instance, blockStateModel, directionPredicate, mutableQuadView, randomSource, blockAndTintGetter, blockPos, blockState, bufferer);
+        //     original.call(instance, blockStateModel, directionPredicate, mutableQuadView, randomSource, blockAndTintGetter, blockPos, blockState, bufferer);
+
+        if (eclipticseasons$snowModel != null) {
+            eclipticseasons$cancelDowngradedPass = true;
+            eclipticseasons$shouldCollectBakeQuads = false;
+            original.call(instance, new ExtraRenderDispatcher.OverrideBlockStateModel(blockStateModel,eclipticseasons$snowModel), directionPredicate, mutableQuadView, randomSource, blockAndTintGetter, blockPos, blockState, bufferer);
+        }
         // PlatformModelEmitter.getInstance().emitModel(blockStateModel, this::isFaceCulled, this.getForEmitting(), this.random, this.level, pos, state, this::bufferDefaultModel);
 
         // if (eclipticseasons$snowModel != null) {
@@ -205,6 +209,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
             terrainRenderPassLocalRef.set(DefaultTerrainRenderPasses.CUTOUT);
         }
     }
+
     @Inject(
             method = "release",
             at = @At(value = "TAIL")

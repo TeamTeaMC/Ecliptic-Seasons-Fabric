@@ -81,17 +81,18 @@ public class ClientCon {
     // so if level create and useLevel is none, we should add it if not none means next level
     // if level is none so check if we have received a new level and push it if not means exit
     public static void setUseLevel(Level level) {
-        if (level == null) {
-            useLevel = null;
-            if (nextLevel != null) {
-                useLevel = nextLevel;
-                nextLevel = null;
-            }
-        } else {
-            if (useLevel == null)
-                useLevel = level;
-            else nextLevel = level;
-        }
+        // if (level == null) {
+        //     useLevel = null;
+        //     if (nextLevel != null) {
+        //         useLevel = nextLevel;
+        //         nextLevel = null;
+        //     }
+        // } else {
+        //     if (useLevel == null)
+        //         useLevel = level;
+        //     else nextLevel = level;
+        // }
+        useLevel=level;
     }
 
     public static void onClientPlayerExit() {

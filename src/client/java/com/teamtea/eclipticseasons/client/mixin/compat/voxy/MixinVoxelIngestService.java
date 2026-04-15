@@ -6,11 +6,15 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.teamtea.eclipticseasons.client.util.ClientCon;
 import com.teamtea.eclipticseasons.compat.voxy.VoxyTool;
+import com.teamtea.eclipticseasons.compat.voxy.helper.IVoxyAboveLightingSupplier;
 import com.teamtea.eclipticseasons.compat.voxy.helper.IVoxyLevelProvider;
 import me.cortex.voxy.common.voxelization.VoxelizedSection;
 import me.cortex.voxy.common.world.service.VoxelIngestService;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -64,7 +68,26 @@ public abstract class MixinVoxelIngestService {
             ConcurrentLinkedDeque<E> instance, E e, Operation<Boolean> original,
             @Local(argsOnly = true) LevelChunk chunk) {
         if (VoxyTool.isVoxyTest() && e instanceof IVoxyLevelProvider levelProvider) {
-            levelProvider.setLevelReference(chunk.getLevel());
+            levelProvider.setLevelReference(chunk);
+            // new IVoxyAboveLightingSupplier(get)
+        }
+        return original.call(instance, e);
+    }
+
+    @WrapOperation(
+            remap = false,
+            method = "rawIngest0",
+            at = @At(value = "INVOKE", target = "Ljava/util/concurrent/ConcurrentLinkedDeque;add(Ljava/lang/Object;)Z")
+    )
+    private <E> boolean eclipticseasons$rawIngest0(
+            ConcurrentLinkedDeque<E> instance, E e, Operation<Boolean> original,
+            @Local(name = "x") int x,
+            @Local(name = "z") int z) {
+        if (VoxyTool.isVoxyTest() && e instanceof IVoxyLevelProvider levelProvider) {
+            ChunkAccess chunk = ClientCon.getUseLevel().getChunkSource().getChunk(x, z, ChunkStatus.FULL, false);
+           if(chunk instanceof LevelChunk chunk1)
+                levelProvider.setLevelReference(chunk1);
+            // new IVoxyAboveLightingSupplier(get)
         }
         return original.call(instance, e);
     }

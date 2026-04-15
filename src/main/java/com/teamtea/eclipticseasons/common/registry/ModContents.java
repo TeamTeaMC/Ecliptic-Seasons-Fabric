@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.fabric.impl.resource.ResourceLoaderImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
@@ -80,12 +81,18 @@ public class ModContents {
 
 
         if (Platform.isPhysicalClient()) {
-            ResourceLoader.registerBuiltinPack(
+            // ResourceLoader.registerBuiltinPack(
+            //         EclipticSeasons.rl("legacy_snowy_block"),
+            //         container,
+            //         Component.translatable("pack.eclipticseasons.legacy_snowy_block"),
+            //         PackActivationType.NORMAL
+            // );
+            ResourceLoaderImpl.registerBuiltinPack(
                     EclipticSeasons.rl("legacy_snowy_block"),
+                    "resourcepacks/EclipticSeasonsLegacySnowyBlock",
                     container,
                     Component.translatable("pack.eclipticseasons.legacy_snowy_block"),
-                    PackActivationType.NORMAL
-            );
+                    PackActivationType.NORMAL);
         }
 
 

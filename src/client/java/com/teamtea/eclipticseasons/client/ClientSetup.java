@@ -50,6 +50,7 @@ public class ClientSetup {
 
     public static void onRegisterKeyMappingsEvent() {
         KeyMappingHelper.registerKeyMapping(KeyMappingRegistry.DEBUG_KEY);
+        KeyMappingHelper.registerKeyMapping(KeyMappingRegistry.DEBUG_KEY_1);
     }
 
     public static void onParticleProviderRegistry() {

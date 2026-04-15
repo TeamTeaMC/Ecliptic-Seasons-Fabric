@@ -12,6 +12,7 @@ import net.minecraft.resources.Identifier;
 
 public final class StandaloneModelKey<T> {
     private final ModelDebugName name;
+    private ExtraModelKey<T> cacheKey;
 
     public StandaloneModelKey(ModelDebugName name) {
         this.name = name;
@@ -26,11 +27,12 @@ public final class StandaloneModelKey<T> {
         return "StandaloneModelKey[name=" + this.name.debugName() + ']';
     }
 
-    public Identifier to(){
+    public Identifier to() {
         return Identifier.parse(getName());
     }
 
-    public ExtraModelKey<T> toFabric(){
-        return ExtraModelKey.create(name::debugName);
+    public ExtraModelKey<T> toFabric() {
+        if (cacheKey == null) cacheKey = ExtraModelKey.create(name::debugName);
+        return cacheKey;
     }
 }
