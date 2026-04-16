@@ -17,7 +17,7 @@
       "translate": "advancement.eclipticseasons.winter_start.desc"
     },
     "icon": {
-      "items": "minecraft:snowball"
+      "id": "minecraft:snowball"
     },
     "show_toast": false,
     "title": {
