@@ -126,7 +126,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
 
         if (eclipticseasons$snowModel != null) {
             eclipticseasons$shouldReplaceOriginalGrassModel =
-                    ExtraModelManager.isModelReplaceable(MapChecker.getDefaultBlockTypeFlag(state));
+                    ExtraModelManager.isModelReplaceable(eclipticseasons$snowModel,MapChecker.getDefaultBlockTypeFlag(state));
             if (!eclipticseasons$shouldReplaceOriginalGrassModel) {
                 boolean ctmBlock = ExtraModelManager.isSpecialCTMBlock(state);
                 if (ctmBlock) {

@@ -9,6 +9,7 @@ import com.teamtea.eclipticseasons.common.hook.ESEventHook;
 import com.teamtea.eclipticseasons.common.network.SimpleNetworkHandler;
 import com.teamtea.eclipticseasons.common.registry.*;
 import com.teamtea.eclipticseasons.compat.CompatModule;
+import com.teamtea.eclipticseasons.compat.Platform;
 import com.teamtea.eclipticseasons.compat.eclipticseasons_bundles.EclipticSeasonsBundles;
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
@@ -137,12 +138,14 @@ public class EclipticSeasons implements ModInitializer {
         fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.CLIENT, ClientConfig.CLIENT_CONFIG);
         fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.STARTUP, StartConfig.START_CONFIG);
 
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(CommonConfig::UpdateConfig);
+        // not work
+        // fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(CommonConfig::UpdateConfig);
         // fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(CommonConfig::UpdateConfig);
-
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(ClientConfig::UpdateConfig);
+        // fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(ClientConfig::UpdateConfig);
         // fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(ClientConfig::UpdateConfig);
 
+
+        ServerLifecycleEvents.SERVER_STARTING.register(e->CommonConfig.UpdateConfig());
 
         CompatModule.setup();
 

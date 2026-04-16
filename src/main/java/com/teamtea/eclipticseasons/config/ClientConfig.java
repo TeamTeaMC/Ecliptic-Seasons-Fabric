@@ -239,8 +239,9 @@ public class ClientConfig {
     @Getter
     private static boolean topFaceCulling = false;
 
-    public static void UpdateConfig(ModConfig modConfig) {
-        if (modConfig.getSpec() == CLIENT_CONFIG) {
+    public static void UpdateConfig() {
+        // if (modConfig.getSpec() == CLIENT_CONFIG)
+        {
             topFaceCulling = Renderer.topFaceCulling.get();
         }
     }

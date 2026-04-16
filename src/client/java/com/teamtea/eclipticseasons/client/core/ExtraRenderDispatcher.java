@@ -50,44 +50,6 @@ import java.util.List;
 
 public class ExtraRenderDispatcher {
 
-    public static void appendModels(IMapSlice mapSlice, BlockState blockState, RandomSource random, BlockPos pos, List<BlockStateModelPart> parts) {
-        if (canSnowy(mapSlice, pos, blockState, blockState.getSeed(pos), mapSlice.getModelCheckPos())) {
-            BlockState snowState = null;
-            int flag = MapChecker.getDefaultBlockTypeFlag(blockState);
-            int offset = MapChecker.getSnowOffset(blockState, flag);
-            if (flag == MapChecker.FLAG_STAIRS) {
-                snowState = BlockRegistry.snowyStairs.defaultBlockState()
-                        .setValue(StairBlock.FACING, blockState.getValue(StairBlock.FACING))
-                        .setValue(StairBlock.HALF, blockState.getValue(StairBlock.HALF))
-                        .setValue(StairBlock.SHAPE, blockState.getValue(StairBlock.SHAPE));
-            } else if (flag == MapChecker.FLAG_VINE) {
-                snowState = BlockRegistry.snowyVine.defaultBlockState()
-                        .setValue(VineBlock.EAST, blockState.getValue(VineBlock.EAST))
-                        .setValue(VineBlock.WEST, blockState.getValue(VineBlock.WEST))
-                        .setValue(VineBlock.SOUTH, blockState.getValue(VineBlock.SOUTH))
-                        .setValue(VineBlock.NORTH, blockState.getValue(VineBlock.NORTH))
-                        .setValue(VineBlock.UP, blockState.getValue(VineBlock.UP))
-                ;
-            } else if (mapSlice.getSolidBlockHeight(pos) == pos.getY()) {
-                snowState = BlockRegistry.snowyLeaves.defaultBlockState();
-            }
-
-            BlockStateModel blockStateModel = ExtraModelManager.getSnowyModel(blockState, snowState, flag, offset);
-            if (blockStateModel != null) {
-
-                if (ExtraModelManager.isModelReplaceable(flag)) {
-                    parts.clear();
-                }
-                // net.neoforged.neoforge.client.model.quad.MutableQuad
-
-                // booleanRef.set(false);
-                // new BakedQuad().spriteInfo()
-
-                blockStateModel.collectParts(random, parts);
-            }
-        }
-    }
-
 
     public static BlockPos.MutableBlockPos posToMutable(BlockPos pos) {
         return pos.mutable();

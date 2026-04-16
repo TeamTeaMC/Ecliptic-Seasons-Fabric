@@ -29,7 +29,7 @@ public class VoxyClientTool {
                 return;
             }
             ExtraRendererContext context = new ExtraRendererContext();
-            context.setReplace(ExtraModelManager.isModelReplaceable(defaultBlockTypeFlag))
+            context.setReplace(ExtraModelManager.isModelReplaceable(model, defaultBlockTypeFlag))
                     .setExtraModel(model)
                     .setOriginalModel(ExtraModelManager.models.getBlockStateModel(state))
             ;

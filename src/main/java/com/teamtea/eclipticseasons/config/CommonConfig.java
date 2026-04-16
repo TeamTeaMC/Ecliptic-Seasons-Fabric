@@ -549,8 +549,9 @@ public class CommonConfig {
     @Getter
     private static final Set<Block> forceBlocksNotSnowy = new HashSet<>();
 
-    public static void UpdateConfig(ModConfig config) {
-        if (config.getSpec() == COMMON_CONFIG) {
+    public static void UpdateConfig() {
+        // if (config.getSpec() == COMMON_CONFIG)
+        {
             useSolarWeather = Weather.useSolarWeather.get();
             forceCropCompatMode = Crop.forceCompatMode.get();
             snowyWinter = Snow.snowyWinter.get();

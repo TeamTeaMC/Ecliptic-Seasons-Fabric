@@ -67,7 +67,9 @@ public class ExtraModelManager {
         return new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public static boolean isModelReplaceable(int flag) {
+    public static boolean isModelReplaceable(BlockStateModel snowOverlay, int flag) {
+        if (snowOverlay instanceof ReplacingBlockStateModel rp)
+            return rp.replace();
         return flag == MapChecker.FLAG_GRASS
                 || flag == MapChecker.FLAG_GRASS_LARGE;
     }
@@ -324,7 +326,6 @@ public class ExtraModelManager {
     public static boolean isSpecialSnowySprite(TextureAtlasSprite textureAtlasSprite) {
         return textureAtlasSprite.contents().name().toString().contains("snow");
     }
-
 
 
     public record ModelIDHolder(Identifier id) implements ModelDebugName {
