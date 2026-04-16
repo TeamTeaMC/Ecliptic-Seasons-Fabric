@@ -11,7 +11,7 @@
       "translate": "advancement.eclipticseasons.quest.desc"
     },
     "icon": {
-      "id": "eclipticseasons:pinwheel_lime"
+      "id": "minecraft:wildflowers"
     },
     "show_toast": false,
     "title": {

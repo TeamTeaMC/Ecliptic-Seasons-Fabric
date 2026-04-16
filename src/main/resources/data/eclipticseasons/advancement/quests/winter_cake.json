@@ -38,10 +38,5 @@
       "core_require"
     ]
   ],
-  "rewards": {
-    "loot": [
-      "eclipticseasons:gifts/winter_greenhouse_essence"
-    ]
-  },
   "sends_telemetry_event": true
 }

@@ -23,6 +23,7 @@ import net.minecraft.world.level.biome.BiomeManager;
 import org.jspecify.annotations.NonNull;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.*;
 
 public class SeasonalBiomeAmbientSoundsHandler implements AmbientSoundHandler {
@@ -95,7 +96,8 @@ public class SeasonalBiomeAmbientSoundsHandler implements AmbientSoundHandler {
                         }
                     }
                     if (sound.isInwater() != inWater) continue;
-                    if (!sound.getBiomes().contains(biome)) continue;
+                    if (sound.getBiomes().size() > 0 && !sound.getBiomes().contains(biome)) continue;
+                    if (sound.getIgnored_biomes().contains(biome)) continue;
                     if (sound.getSeed() > 0 && level.getRandom().nextInt(sound.getSeed()) > 0) continue;
                     seasonalBiomeAmbientList.add(sound);
                 }

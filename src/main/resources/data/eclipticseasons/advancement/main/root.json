@@ -10,7 +10,7 @@
       "translate": "advancement.eclipticseasons.root.desc"
     },
     "icon": {
-      "id": "eclipticseasons:bamboo_wind_chimes"
+      "id": "minecraft:leaf_litter"
     },
     "title": {
       "translate": "advancement.eclipticseasons.root"
