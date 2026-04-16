@@ -1,4 +1,4 @@
-package net.neoforged.neoforge.event.level;
+package warp.net.neoforged.neoforge.event.level;
 
 import lombok.Data;
 import net.minecraft.core.BlockPos;
@@ -6,7 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.neoforged.bus.api.Event;
+import warp.net.neoforged.bus.api.Event;
 import org.jspecify.annotations.Nullable;
 
 @Data

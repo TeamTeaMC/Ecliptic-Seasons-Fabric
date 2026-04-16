@@ -26,7 +26,6 @@ import com.teamtea.eclipticseasons.compat.ctm.CtmLoader;
 import com.teamtea.eclipticseasons.compat.ctm.CtmProperties;
 import com.teamtea.eclipticseasons.config.CommonConfig;
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
-import net.fabricmc.fabric.api.client.model.loading.v1.FabricModelManager;
 import net.fabricmc.fabric.api.client.model.loading.v1.UnbakedExtraModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
@@ -51,7 +50,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import warp.net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;

@@ -32,7 +32,7 @@ public class Platform {
     }
 
 
-    public static Optional<ModContainer> getModContainer(String id) {
+    public static Optional<ModContainer> getModFile(String id) {
         return FabricLoader.getInstance().getModContainer(id);
     }
 

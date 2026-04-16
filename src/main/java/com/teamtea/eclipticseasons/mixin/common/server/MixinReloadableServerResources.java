@@ -1,21 +1,8 @@
 package com.teamtea.eclipticseasons.mixin.common.server;
 
 
-import com.teamtea.eclipticseasons.common.hook.ESEventHook;
-import net.minecraft.core.*;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerResources;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Mixin(ReloadableServerResources.class)
 public abstract class MixinReloadableServerResources {

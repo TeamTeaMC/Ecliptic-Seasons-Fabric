@@ -9,6 +9,7 @@ import com.teamtea.eclipticseasons.common.hook.ESEventHook;
 import com.teamtea.eclipticseasons.common.network.SimpleNetworkHandler;
 import com.teamtea.eclipticseasons.common.registry.*;
 import com.teamtea.eclipticseasons.compat.CompatModule;
+import com.teamtea.eclipticseasons.compat.eclipticseasons_bundles.EclipticSeasonsBundles;
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
 import com.teamtea.eclipticseasons.config.StartConfig;
@@ -26,7 +27,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import warp.net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ladysnake.cca.api.v3.chunk.ChunkSyncCallback;
@@ -132,6 +133,17 @@ public class EclipticSeasons implements ModInitializer {
     @Override
     public void onInitialize() {
 
+        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CommonConfig.COMMON_CONFIG);
+        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.CLIENT, ClientConfig.CLIENT_CONFIG);
+        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.STARTUP, StartConfig.START_CONFIG);
+
+        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(CommonConfig::UpdateConfig);
+        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(CommonConfig::UpdateConfig);
+
+        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(ClientConfig::UpdateConfig);
+        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(ClientConfig::UpdateConfig);
+
+
         CompatModule.setup();
 
         ModContents.registerBuiltinResourcePacks();
@@ -143,15 +155,6 @@ public class EclipticSeasons implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(CommandHandler::onRegisterCommands);
 
-        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CommonConfig.COMMON_CONFIG);
-        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.CLIENT, ClientConfig.CLIENT_CONFIG);
-        fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.STARTUP, StartConfig.START_CONFIG);
-
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(CommonConfig::UpdateConfig);
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(CommonConfig::UpdateConfig);
-
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.loading(MODID).register(ClientConfig::UpdateConfig);
-        fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents.reloading(MODID).register(ClientConfig::UpdateConfig);
 
 
         BlockRegistry.init();
@@ -170,6 +173,8 @@ public class EclipticSeasons implements ModInitializer {
 
 
         registerEvent();
+
+        EclipticSeasonsBundles.init();
     }
 
     private void registerEvent() {

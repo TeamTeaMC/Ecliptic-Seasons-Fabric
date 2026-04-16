@@ -1,7 +1,7 @@
 {
 	"format_version": "1.21.11",
 	"credit": "Made by Joe Vettek",
-	"parent": "block/blocks",
+	"parent": "block/block",
 	"textures": {
 		"particle": "block/snow",
 		"top": "block/snow",

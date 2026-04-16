@@ -1,11 +1,11 @@
-package net.neoforged.neoforge.event;
+package warp.net.neoforged.neoforge.event;
 
 
 import com.teamtea.eclipticseasons.api.event.IESEvent;
 import lombok.Builder;
 import lombok.Data;
 import net.minecraft.core.HolderLookup;
-import net.neoforged.bus.api.Event;
+import warp.net.neoforged.bus.api.Event;
 
 @Data
 @Builder

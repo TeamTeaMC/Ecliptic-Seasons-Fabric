@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import warp.net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.jspecify.annotations.NonNull;
 
 import org.jspecify.annotations.Nullable;

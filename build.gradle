@@ -104,6 +104,7 @@ dependencies {
 	implementation "org.ladysnake.cardinal-components-api:cardinal-components-chunk:${cca_version}"
 	include "org.ladysnake.cardinal-components-api:cardinal-components-chunk:${cca_version}"
 
+	compileOnly "com.electronwill.night-config:core:3.8.3"
 //	implementation "org.ladysnake.cardinal-components-api:cardinal-components-world:${cca_version}"
 //	include "org.ladysnake.cardinal-components-api:cardinal-components-world:${cca_version}"
 }

@@ -1,5 +1,6 @@
 package com.teamtea.eclipticseasons.common.registry;
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.teamtea.eclipticseasons.EclipticSeasons;
 import com.teamtea.eclipticseasons.api.EclipticSeasonsApi;
 import com.teamtea.eclipticseasons.api.data.misc.ESSortInfo;
@@ -32,6 +33,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 
 public class ModContents {
@@ -75,53 +78,71 @@ public class ModContents {
 
 
     public static void registerBuiltinResourcePacks() {
-        ModContainer container = FabricLoader.getInstance()
+        ModContainer modFile = FabricLoader.getInstance()
                 .getModContainer(EclipticSeasonsApi.MODID)
                 .orElseThrow();
-
+        CommentedFileConfig oldConfig = CommentedFileConfig.builder(FabricLoader.getInstance().getConfigDir().resolve(EclipticSeasons.defaultConfigName(ModConfig.Type.COMMON, EclipticSeasons.MODID)))
+                .preserveInsertionOrder().build();
+        oldConfig.load();
 
         if (Platform.isPhysicalClient()) {
             // ResourceLoader.registerBuiltinPack(
             //         EclipticSeasons.rl("legacy_snowy_block"),
-            //         container,
+            //         modFile,
             //         Component.translatable("pack.eclipticseasons.legacy_snowy_block"),
             //         PackActivationType.NORMAL
             // );
             ResourceLoaderImpl.registerBuiltinPack(
                     EclipticSeasons.rl("legacy_snowy_block"),
                     "resourcepacks/EclipticSeasonsLegacySnowyBlock",
-                    container,
+                    modFile,
                     Component.translatable("pack.eclipticseasons.legacy_snowy_block"),
                     PackActivationType.NORMAL);
         }
 
 
-        // if (StartConfig.Resource.extraSnow.get()) {
-        //     ResourceLoader.registerBuiltinPack(
-        //             EclipticSeasons.rl("extra_snow"),
-        //             container,
-        //             PackActivationType.DEFAULT_ENABLED
-        //     );
-        // }
+        if (StartConfig.Resource.extraSnow.get()) {
+            ResourceLoader.registerBuiltinPack(
+                    EclipticSeasons.rl("extra_snow"),
+                    modFile,
+                    PackActivationType.ALWAYS_ENABLED
+            );
+        }
 
 
-        // registerIf(container, "rain_together", CommonConfig.Resource.RainTogether.get());
-        // registerIf(container, "regional_snow_time", CommonConfig.Resource.RegionalSnowTime.get());
-        // registerIf(container, "snow_together", CommonConfig.Resource.SnowTogether.get());
-        // registerIf(container, "vanilla_biome_climate_settings", CommonConfig.Resource.VanillaBiomeClimateSettings.get());
-        // registerIf(container, "not_ignore_river", CommonConfig.Resource.NotIgnoreRiver.get());
+        addPackIfEnabled(oldConfig,modFile,
+                CommonConfig.Resource.RainTogether, "Rain Together", "rain_together");
+        addPackIfEnabled(oldConfig, modFile,
+                CommonConfig.Resource.RegionalSnowTime, "Regional Snow Time", "regional_snow_time");
+        addPackIfEnabled(oldConfig, modFile,
+                CommonConfig.Resource.SnowTogether, "Snow Together", "snow_together");
+        addPackIfEnabled(oldConfig, modFile,
+                CommonConfig.Resource.VanillaBiomeClimateSettings, "Vanilla Biome Climate Settings", "vanilla_biome_climate_settings");
+        addPackIfEnabled(oldConfig, modFile,
+                CommonConfig.Resource.NotIgnoreRiver, "Not Ignore River", "not_ignore_river");
+
+        oldConfig.close();
     }
 
 
-    private static void registerIf(ModContainer container, String path, boolean enabled) {
-        if (enabled) {
-            var id = EclipticSeasons.rl(path);
-            ResourceLoader.registerBuiltinPack(
-                    id,
-                    container,
-                    Component.translatable("pack." + id.getNamespace() + "." + id.getPath()),
-                    PackActivationType.DEFAULT_ENABLED
-            );
+    private static void addPackIfEnabled(CommentedFileConfig oldConfig, ModContainer modFile, ModConfigSpec.BooleanValue use, String packname, String packid) {
+        if (isShouldLoad(oldConfig,use)) {
+            ResourceLoaderImpl.registerBuiltinPack(
+                    EclipticSeasons.rl(packid),
+                    "resourcepacks/"+packname,
+                    modFile,
+                    Component.translatable("pack.eclipticseasons."+packid),
+                    PackActivationType.ALWAYS_ENABLED);
         }
+    }
+
+    private static boolean isShouldLoad(CommentedFileConfig oldConfig, ModConfigSpec.BooleanValue booleanValue) {
+        boolean shouldLoad;
+        try {
+            shouldLoad = booleanValue.get();
+        } catch (IllegalStateException illegalStateException) {
+            shouldLoad = oldConfig.getOrElse(booleanValue.getPath(), false);
+        }
+        return shouldLoad;
     }
 }

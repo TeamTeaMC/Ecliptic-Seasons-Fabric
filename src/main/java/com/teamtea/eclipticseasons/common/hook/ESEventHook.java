@@ -10,7 +10,7 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import warp.net.neoforged.neoforge.event.TagsUpdatedEvent;
 
 public class ESEventHook {
 

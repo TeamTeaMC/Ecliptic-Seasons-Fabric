@@ -25,7 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import warp.net.neoforged.neoforge.event.TagsUpdatedEvent;
 
 import org.jspecify.annotations.Nullable;
 

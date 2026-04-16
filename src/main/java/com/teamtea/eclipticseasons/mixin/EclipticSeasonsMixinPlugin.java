@@ -1,13 +1,17 @@
 package com.teamtea.eclipticseasons.mixin;
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.teamtea.eclipticseasons.api.EclipticSeasonsApi;
 import com.teamtea.eclipticseasons.compat.CompatModule;
 import com.teamtea.eclipticseasons.compat.Platform;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 
@@ -72,32 +76,31 @@ public class EclipticSeasonsMixinPlugin implements IMixinConfigPlugin {
 
 
     public static class PreloadedConfig {
-        // private static CommentedFileConfig config;
+        private static CommentedFileConfig config;
 
         public static void onLoad(String mixinPackage) {
-            // var path = FMLPaths.CONFIGDIR.get().resolve(String.format(Locale.ROOT, "%s-mixins.toml", EclipticSeasonsApi.MODID));
-            // config = CommentedFileConfig.builder(path)
-            //         .sync()
-            //         .preserveInsertionOrder()
-            //         .autosave()
-            //         .build();
-            // config.load();
+            var path = FabricLoader.getInstance().getConfigDir().resolve(String.format(Locale.ROOT, "%s-mixins.toml", EclipticSeasonsApi.MODID));
+            config = CommentedFileConfig.builder(path)
+                    .sync()
+                    .preserveInsertionOrder()
+                    .autosave()
+                    .build();
+            config.load();
         }
 
         public static boolean shouldApply(String mixinClassName) {
             String[] parts = mixinClassName.split("\\.");
             if (parts.length <= 4) return true;
 
-            // List<String> pathList = Arrays.stream(parts).skip(4).toList();
-            //
-            // if (!config.contains(pathList)) {
-            //     config.set(String.join(".", pathList), true);
-            //     config.save();
-            //     return true;
-            // }
-            //
-            // return config.get(pathList);
-            return true;
+            List<String> pathList = Arrays.stream(parts).skip(4).toList();
+
+            if (!config.contains(pathList)) {
+                config.set(String.join(".", pathList), true);
+                config.save();
+                return true;
+            }
+
+            return config.get(pathList);
         }
     }
 }

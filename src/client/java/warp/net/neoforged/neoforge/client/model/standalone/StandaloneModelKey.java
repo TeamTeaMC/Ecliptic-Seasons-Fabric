@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-only
  */
 
-package net.neoforged.neoforge.client.model.standalone;
+package warp.net.neoforged.neoforge.client.model.standalone;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.minecraft.client.resources.model.ModelDebugName;
