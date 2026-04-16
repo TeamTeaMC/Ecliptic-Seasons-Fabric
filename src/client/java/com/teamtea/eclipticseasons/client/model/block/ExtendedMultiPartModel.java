@@ -2,6 +2,7 @@ package com.teamtea.eclipticseasons.client.model.block;
 
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.client.renderer.v1.model.FabricBlockStateModel;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.multipart.MultiPartModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -16,11 +18,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ExtendedMultiPartModel extends MultiPartModel implements NeoLikeBlockStateModel {
     private final List<Selector<BlockStateModel>> selectors;
@@ -73,6 +77,12 @@ public class ExtendedMultiPartModel extends MultiPartModel implements NeoLikeBlo
             //     }
             // }
         }
+    }
+
+    // Since Fabric Mixin MultiPart Model, so we need a specail clall
+    @Override
+    public void emitQuads(@NonNull QuadEmitter emitter, @NonNull BlockAndTintGetter level, @NonNull BlockPos pos, @NonNull BlockState state, @NonNull RandomSource random, @NonNull Predicate<@Nullable Direction> cullTest) {
+        NeoLikeBlockStateModel.super.emitQuads(emitter, level, pos, state, random, cullTest);
     }
 
     public static class Unbaked extends MultiPartModel.Unbaked {
