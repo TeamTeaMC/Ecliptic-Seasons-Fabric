@@ -108,7 +108,7 @@ jobs:
           changelog-file: changelog.md
           loaders: fabric
           game-versions: |
-            [26.1.1,26.2)
+            [26.1,26.2)
           dependencies: ""
           name: "${{env.RELEASE_NAME}}"
           files: |
