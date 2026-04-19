@@ -324,7 +324,7 @@ public class WeatherManager {
     }
 
     public static void runWeather(ServerLevel level, BiomeWeather biomeWeather, RandomSource random, int size) {
-        if (!level.canHaveWeather() && !MapChecker.isValidDimension(level)) return;
+        if (!level.canHaveWeather() || !MapChecker.isValidDimension(level)) return;
 
         Holder<Biome> onwer = getOnwer(level, biomeWeather.biomeHolder);
         if (onwer != null && !onwer.equals(biomeWeather.biomeHolder)) {
