@@ -345,50 +345,74 @@ public class WeatherManager {
             return;
 
         WeatherData weatherData = level.getWeatherData();
-        int clearWeatherTime = weatherData.getClearWeatherTime();
-        int thunderTime = weatherData.getThunderTime();
+
+        SolarTerm solarTerm = EclipticUtil.getNowSolarTerm(level);
+        BiomeRain biomeRain = biomeWeather.getBiomeRain();
+
+        int clearTime = weatherData.getClearWeatherTime();
         int rainTime = weatherData.getRainTime();
-        boolean thundering = weatherData.isThundering();
+        int thunderTime = weatherData.getThunderTime();
         boolean raining = weatherData.isRaining();
-        if (clearWeatherTime > 0) {
-            clearWeatherTime--;
-            thunderTime = thundering ? 0 : 1;
-            rainTime = raining ? 0 : 1;
-            thundering = false;
+        boolean thundering = weatherData.isThundering();
+
+        if (clearTime > 0) {
+            clearTime--;
             raining = false;
-        } else {
-            if (thunderTime > 0) {
-                if (--thunderTime == 0) {
-                    thundering = !thundering;
+            thundering = false;
+            rainTime = 1;
+            thunderTime = 0;
+        }
+        else {
+            if (raining) {
+                if (--rainTime <= 0) {
+                    raining = false;
+                    rainTime = biomeRain.getRainDelay(random) / size;
                 }
-            } else if (thundering) {
-                thunderTime = biomeWeather.getBiomeRain().getThunderDuration(random) / size;
             } else {
-                float weight = 1.5f - biomeWeather.getBiomeRain().getThunderChance()
-                        * ((CommonConfig.Weather.thunderChanceMultiplier.get() * 1f) / 100f)
-                        * size / 3000f;
-                thunderTime = Math.max(1,  (int) (weight * biomeWeather.getBiomeRain().getThunderDelay(random) / size));
+                if (rainTime > 0) {
+                    rainTime--;
+                } else {
+                    float downfall = EclipticUtil.getDownfallFloatConstant(solarTerm, biomeWeather.biomeHolder.value(), !level.isClientSide());
+                    float rainWeight = biomeRain.getRainChance()
+                            * Math.max(0.01f, downfall)
+                            * (CommonConfig.Weather.rainChanceMultiplier.get() / 100f);
+
+                    if (level.getRandom().nextFloat() < rainWeight) {
+                        raining = true;
+                        rainTime = biomeRain.getRainDuration(random) / size;
+                    } else {
+                        rainTime = 100;
+                    }
+                }
             }
 
-            if (rainTime > 0) {
-                if (--rainTime == 0) {
-                    raining = !raining;
+            if (raining) {
+                if (thundering) {
+                    if (--thunderTime <= 0) {
+                        thundering = false;
+                    }
+                } else {
+                    float thunderWeight = biomeRain.getThunderChance()
+                            * (CommonConfig.Weather.thunderChanceMultiplier.get() / 100f)
+                            * size / 3000f;
+
+                    if (level.getRandom().nextFloat() < thunderWeight) {
+                        thundering = true;
+                        thunderTime = biomeRain.getThunderDuration(random) / size;
+                    }
                 }
-            } else if (raining) {
-                rainTime = biomeWeather.getBiomeRain().getRainDuration(random) / size;
             } else {
-                float weight = 1.5f - biomeWeather.getBiomeRain().getRainChance()
-                        * ((CommonConfig.Weather.rainChanceMultiplier.get() * 1f) / 100f)
-                        * size / 3000f;
-                rainTime = Math.max(1, (int) (weight * biomeWeather.getBiomeRain().getRainDelay(random) / size));
+                thundering = false;
+                thunderTime = 0;
             }
         }
 
-        weatherData.setThunderTime(thunderTime);
+
+        weatherData.setClearWeatherTime(clearTime);
         weatherData.setRainTime(rainTime);
-        weatherData.setClearWeatherTime(clearWeatherTime);
-        weatherData.setThundering(thundering);
+        weatherData.setThunderTime(thunderTime);
         weatherData.setRaining(raining);
+        weatherData.setThundering(thundering);
 
         if (weatherData.isRaining()) {
             biomeWeather.effect = biomeWeather.biomeRain.hasSpecialEffect() ?
