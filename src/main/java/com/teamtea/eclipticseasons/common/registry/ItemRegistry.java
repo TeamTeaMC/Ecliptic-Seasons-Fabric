@@ -16,13 +16,13 @@ import java.util.function.Function;
 public class ItemRegistry {
 
     public static final Item hygrometer = register("hygrometer",
-            p -> new MeterBlockItem(BlockRegistry.calendar, p));
+            p -> new MeterBlockItem(BlockRegistry.calendar, p.useBlockDescriptionPrefix()));
 
     public static final Item growth_detector = register("growth_detector",
             GrowthDetectorItem::new);
 
     public static final Item calendar_item = register("calendar",
-            p -> new CalendarBlockItem(BlockRegistry.calendar, p));
+            p -> new CalendarBlockItem(BlockRegistry.calendar, p.useBlockDescriptionPrefix()));
 
     public static final Item snowless_hometown = register("snowless_hometown",
             p -> new Item(p.stacksTo(1)
