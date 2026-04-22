@@ -15,6 +15,8 @@ public class WeatherEffects {
     public static final Identifier SNOW = EclipticSeasons.rl("snow");
     public static final Identifier RAIN = EclipticSeasons.rl("rain");
     public static final Identifier COMPOSITE = EclipticSeasons.rl("composite");
+    public static final Identifier RAIN_TEXTURE = EclipticSeasons.rl("rain_texture");
+    public static final Identifier SNOW_TEXTURE = EclipticSeasons.rl("snow_texture");
 
     public static void register(Identifier id, MapCodec<? extends WeatherEffect> codec) {
         EFFECTS.put(id, codec);
@@ -26,5 +28,7 @@ public class WeatherEffects {
         register(SNOW, SnowEffect.CODEC);
         register(RAIN, RainEffect.CODEC);
         register(COMPOSITE, CompositeEffect.CODEC);
+        register(RAIN_TEXTURE, RainTextureEffect.CODEC);
+        register(SNOW_TEXTURE, SnowTextureEffect.CODEC);
     }
 }

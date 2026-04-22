@@ -1,7 +1,6 @@
 package com.teamtea.eclipticseasons.api.data.weather.special_effect;
 
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Builder;

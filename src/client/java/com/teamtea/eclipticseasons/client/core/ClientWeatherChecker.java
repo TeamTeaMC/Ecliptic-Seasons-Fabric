@@ -1,23 +1,14 @@
 package com.teamtea.eclipticseasons.client.core;
 
-import com.teamtea.eclipticseasons.api.util.EclipticUtil;
+import com.teamtea.eclipticseasons.api.data.weather.special_effect.WeatherEffect;
+import com.teamtea.eclipticseasons.api.util.WeatherUtil;
 import com.teamtea.eclipticseasons.client.util.ClientCon;
-import com.teamtea.eclipticseasons.common.core.biome.WeatherManager;
-import com.teamtea.eclipticseasons.common.core.map.MapChecker;
-import com.teamtea.eclipticseasons.common.misc.SimplePair;
 import com.teamtea.eclipticseasons.config.ClientConfig;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.Heightmap;
-import org.jspecify.annotations.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClientWeatherChecker {
     private static boolean isNear(float a, float b, float interval) {
@@ -47,6 +38,23 @@ public class ClientWeatherChecker {
 
     public static float modifyRainAmount(float originalNum, Level level) {
         if (level == null) return originalNum;
-        return  (originalNum  * 0.6f);
+        return (originalNum * 0.6f);
+    }
+
+
+    public static Identifier modifyRainAmount3(TextureManager instance, Identifier identifier, boolean rain) {
+        if (weatherEffectByEntity == null
+                || !weatherEffectByEntity.shouldChangeTexture(rain)) return identifier;
+        return weatherEffectByEntity.onTextureBinding(identifier, rain);
+    }
+
+    private static WeatherEffect weatherEffectByEntity;
+
+    public static void tickLevel(Level level) {
+        weatherEffectByEntity = WeatherUtil.getWeatherEffectByEntity(ClientCon.getAgent().getCameraEntity());
+    }
+
+    public static void unload(Level level) {
+        weatherEffectByEntity = null;
     }
 }
