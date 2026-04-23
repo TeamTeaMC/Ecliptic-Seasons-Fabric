@@ -232,6 +232,7 @@ public class EclipticUtil {
                 } else return level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY() <= pos.getY();
             }
 
+            @SuppressWarnings("removal")
             @Override
             public boolean hasLocalWeather(Level level) {
                 return false;
