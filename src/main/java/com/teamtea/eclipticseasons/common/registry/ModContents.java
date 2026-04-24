@@ -69,7 +69,6 @@ public class ModContents {
         DynamicRegistries.registerSynced(ESRegistries.SEASON_CYCLE, SeasonCycle.CODEC);
         DynamicRegistries.registerSynced(ESRegistries.SNOW_TERM, CustomSnowTerm.CODEC);
         DynamicRegistries.registerSynced(ESRegistries.SEASON_DEFINITION, SeasonDefinition.CODEC);
-        DynamicRegistries.registerSynced(ESRegistries.WEATHER_REGION, WeatherRegion.CODEC);
         DynamicRegistries.registerSynced(ESRegistries.EXTRA_INFO, ESSortInfo.CODEC);
         DynamicRegistries.registerSynced(ESRegistries.WEATHER_EFFECT, WeatherEffect.CODEC);
         DynamicRegistries.registerSynced(ESRegistries.BIOME_RAIN, CustomRainBuilder.CODEC);

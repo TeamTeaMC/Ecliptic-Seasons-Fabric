@@ -44,8 +44,6 @@ public class ESRegistries {
 
     public static final ResourceKey<Registry<SeasonDefinition>> SEASON_DEFINITION = ResourceKey.createRegistryKey(EclipticSeasons.rl("season_definitions"));
 
-    public static final ResourceKey<Registry<WeatherRegion>> WEATHER_REGION = ResourceKey.createRegistryKey(EclipticSeasons.rl("weather_region"));
-
     public static final ResourceKey<Registry<ESSortInfo>> EXTRA_INFO = ResourceKey.createRegistryKey(EclipticSeasons.rl("extra_info"));
 
     public static final ResourceKey<Registry<WeatherEffect>> WEATHER_EFFECT = ResourceKey.createRegistryKey(EclipticSeasons.rl("biome_rain_effect"));
