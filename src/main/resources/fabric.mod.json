@@ -31,6 +31,9 @@
     ],
     "jade": [
       "com.teamtea.eclipticseasons.compat.jade.JadeCompact"
+    ],
+    "modmenu": [
+      "com.teamtea.eclipticseasons.compat.modmenu.ModMenuCompact"
     ]
   },
   "custom": {

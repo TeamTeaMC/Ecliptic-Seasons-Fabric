@@ -555,10 +555,14 @@ public class CommonConfig {
     private static boolean cropHumidityTransition = true;
     @Getter
     private static final Set<Block> forceBlocksNotSnowy = new HashSet<>();
+    @Getter
+    private static boolean vanillaSnowAndIce = false;
 
     public static void UpdateConfig() {
         // if (config.getSpec() == COMMON_CONFIG)
-        {useSolarWeather = Weather.useSolarWeather.get();
+        {
+            vanillaSnowAndIce = Temperature.iceMelt.get() && Temperature.snowDown.get();
+            useSolarWeather = Weather.useSolarWeather.get();
             forceCropCompatMode = Crop.forceCompatMode.get();
             snowyWinter = Snow.snowyWinter.get();
             snowInWorld = Snow.snowInWorld.get() && snowyWinter;

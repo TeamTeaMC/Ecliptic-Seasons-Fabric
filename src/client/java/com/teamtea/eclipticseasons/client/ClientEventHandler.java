@@ -11,6 +11,7 @@ import com.teamtea.eclipticseasons.api.misc.client.IBiomeColorHolder;
 import com.teamtea.eclipticseasons.api.util.EclipticUtil;
 import com.teamtea.eclipticseasons.client.color.season.BiomeColorsHandler;
 import com.teamtea.eclipticseasons.client.core.ClientWeatherChecker;
+import com.teamtea.eclipticseasons.client.gui.screen.ESModConfigScreen;
 import com.teamtea.eclipticseasons.client.render.WorldRenderer;
 import com.teamtea.eclipticseasons.client.render.chunk.CompilerCollector;
 import com.teamtea.eclipticseasons.client.render.chunk.IceKeeper;
@@ -141,7 +142,7 @@ public final class ClientEventHandler {
 
 
     public static void onPlayerTick(Entity player) {
-            IceKeeper.checkIfPlayerStepInFrozenWater(player);
+        IceKeeper.checkIfPlayerStepInFrozenWater(player);
     }
 
     private static long lastFreshTime = -1;
@@ -180,11 +181,11 @@ public final class ClientEventHandler {
 
     public static void onRegisterClientCommandsEvent(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
         for (String modid : EclipticSeasonsApi.MODID_LIST) {
-            dispatcher.register(ClientCommands.literal(modid)
+            dispatcher.register(ClientCommands.literal(modid + "c")
                     .then(ClientCommands.literal("c_export")
                             .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                             .then(ClientCommands.argument("pos", BlockPosArgument.blockPos()).executes((stackCommandContext) ->
-                                    MapExporter.exportMap((CommandSourceStack)stackCommandContext.getSource(), BlockPosArgument.getBlockPos((CommandContext)stackCommandContext, "pos"))))
+                                    MapExporter.exportMap((CommandSourceStack) stackCommandContext.getSource(), BlockPosArgument.getBlockPos((CommandContext) stackCommandContext, "pos"))))
                     )
                     .then(ClientCommands.literal("debug")
                             .then(ClientCommands.literal("info_hud")
@@ -194,6 +195,15 @@ public final class ClientEventHandler {
                                     }))
                             )
                     )
+                    .then(ClientCommands.literal("config")
+                            .executes(context1 -> {
+                                Minecraft client = context1.getSource().getClient();
+                                client.execute(() -> {
+                                    client.setScreen(new ESModConfigScreen(null));
+                                });
+                                return 0;
+                            })
+                    )
             );
         }
     }
@@ -201,7 +211,7 @@ public final class ClientEventHandler {
 
     public static void onLoggingIn(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         ClientCon.ServerName =
-                minecraft == null ||   minecraft.player == null ||minecraft.player.connection.getServerData() == null ? "Client" :
+                minecraft == null || minecraft.player == null || minecraft.player.connection.getServerData() == null ? "Client" :
                         minecraft.player.connection.getServerData().name;
         // ClientCon.ServerName=event.getPlayer().connection.getConnection().getRemoteAddress().toString();
     }

@@ -23,7 +23,8 @@ public class CompatModule {
     @Getter
     private static boolean voxy = false;
 
-
+    @Getter
+    private static boolean configured = false;
     /**
      * Used for mod init detect.
      **/
@@ -35,6 +36,7 @@ public class CompatModule {
         iris = Platform.isModLoaded("iris");
         distanthorizons = Platform.isModLoaded("distanthorizons");
         voxy = Platform.isModLoaded("voxy");
+        configured = Platform.isModLoaded("configured");
     }
 
     /**

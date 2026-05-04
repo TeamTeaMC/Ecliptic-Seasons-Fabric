@@ -12,6 +12,7 @@ import com.teamtea.eclipticseasons.compat.voxy.VoxyEsHandler;
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -74,7 +75,7 @@ public class EclipticSeasonsClient implements ClientModInitializer {
         SimpleNetworkHandlerClient.initClient();
 
 
-        // ClientCommandRegistrationCallback.EVENT.register(ClientEventHandler::onRegisterClientCommandsEvent);
+        ClientCommandRegistrationCallback.EVENT.register(ClientEventHandler::onRegisterClientCommandsEvent);
 
         ModelLoadingPlugin.register(new ClientSetup.ModelImpl());
     }
