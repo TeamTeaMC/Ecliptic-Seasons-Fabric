@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 
 public final class OverlayEventHandler {
     private static DebugInfoRenderer RENDERER;
-    private static long use = -1;
+    // private static long use = -1;
 
     public static void onEvent(GuiGraphicsExtractor guiGraphics) {
 
@@ -21,13 +21,13 @@ public final class OverlayEventHandler {
         var level = mc.level;
 
         if (player != null && level != null && !mc.options.hideGui) {
-            if (KeyMappingRegistry.DEBUG_KEY_1.consumeClick())
-                use = System.currentTimeMillis();
+            // if (KeyMappingRegistry.DEBUG_KEY_1.isDown())
+            //     use = System.currentTimeMillis();
 
-            if (KeyMappingRegistry.DEBUG_KEY.consumeClick()) {
-                long cut = System.currentTimeMillis() - use;
-                if (cut < 1000)
-                    ClientConfig.Debug.debugInfo.set(!ClientConfig.Debug.debugInfo.getAsBoolean());
+            if (KeyMappingRegistry.DEBUG_KEY.consumeClick() && KeyMappingRegistry.DEBUG_KEY_1.isDown()) {
+                // long cut = System.currentTimeMillis() - use;
+                // if (cut < 500)
+                ClientConfig.Debug.debugInfo.set(!ClientConfig.Debug.debugInfo.getAsBoolean());
             }
 
             if (ClientConfig.Debug.debugInfo.get() || ClientConfig.GUI.simpleSeasonHud.get()) {
