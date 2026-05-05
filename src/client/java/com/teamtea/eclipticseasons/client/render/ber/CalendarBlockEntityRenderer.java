@@ -146,7 +146,7 @@ public class CalendarBlockEntityRenderer implements BlockEntityRenderer<Calendar
                                     string = Component.translatable("info.eclipticseasons.environment.solar_term.hint4", EclipticUtil.getNowSolarDay(ClientCon.getUseLevel())).getString();
                             // case SUB_SEASON -> string = "";
                             case SUB_SEASON,MONTH ->
-                                    string = Component.translatable("info.eclipticseasons.environment.solar_term.hint6", EclipticSeasonsApi.getInstance().getStanardMonth(ClientCon.getUseLevel()).getTranslation(), EclipticSeasonsApi.getInstance().getDayOfMonth(ClientCon.getUseLevel())).getString();
+                                    string = Component.translatable("info.eclipticseasons.environment.solar_term.hint6", EclipticSeasonsApi.getInstance().getStandardMonth(ClientCon.getUseLevel()).getTranslation(), EclipticSeasonsApi.getInstance().getDayOfMonth(ClientCon.getUseLevel())).getString();
                             default -> string = seasonPhaseUsed.getTittleTranslation().getString();
                         }
                         drawText(2, string, Color.GRAY.getRGB(), matrixStackIn, multiBufferSource);

@@ -109,8 +109,7 @@ public class MapExporter {
             }
             String s = level instanceof ServerLevel serverLevel ?
                     serverLevel.toString().split("\\[")[1].split("]")[0] :
-                    Platform.getServer() == null ? ClientCon.ServerName :
-                            Platform.getServer().getMotd();
+                    ClientCon.ServerName;
             s += "~" + level.dimension().identifier().toString().replace(":", "_");
             if (!new File(EclipticSeasonsApi.MODID + "/" + s).exists()) {
                 new File(EclipticSeasonsApi.MODID + "/" + s).mkdir();

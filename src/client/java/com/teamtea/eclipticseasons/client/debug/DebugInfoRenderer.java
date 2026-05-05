@@ -37,8 +37,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class DebugInfoRenderer {
     private final Style DEFAULT = Style.EMPTY.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("default")));
@@ -115,7 +113,7 @@ public class DebugInfoRenderer {
             infoLines.addHeader("Ecliptic Debug");
             Season.Sub subSeason = EclipticSeasonsApi.getInstance().getSubSeason(level);
             infoLines.addKV("Sub Season", subSeason.getTranslation().getString(), subSeason.getSeason().getColor().toString());
-            infoLines.addKV("Month", EclipticSeasonsApi.getInstance().getStanardMonth(level).getTranslation().getString() + " " + (EclipticSeasonsApi.getInstance().getDayOfMonth(level)), "§e");
+            infoLines.addKV("Month", EclipticSeasonsApi.getInstance().getStandardMonth(level).getTranslation().getString() + " " + (EclipticSeasonsApi.getInstance().getDayOfMonth(level)), "§e");
             StringBuilder specialDays = new StringBuilder();
             for (Holder<SpecialDays> specialDay : EclipticSeasonsApi.getInstance().getSpecialDays(level, pos)) {
                 specialDays.append(getBiomeName(specialDay, level.registryAccess().lookupOrThrow(ESRegistries.SPECIAL_DAYS)));

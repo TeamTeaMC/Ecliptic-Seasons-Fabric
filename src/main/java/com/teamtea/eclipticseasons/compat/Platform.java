@@ -3,7 +3,9 @@ package com.teamtea.eclipticseasons.compat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.server.MinecraftServer;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
+import net.fabricmc.loader.api.metadata.version.VersionPredicate;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -23,9 +25,9 @@ public class Platform {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 
-    public static MinecraftServer getServer() {
-        return null;
-    }
+    // public static MinecraftServer getServer() {
+    //     return null;
+    // }
 
     public static boolean isProduction() {
         return !FabricLoader.getInstance().isDevelopmentEnvironment();
@@ -40,5 +42,19 @@ public class Platform {
         return FabricLoader.getInstance().getModContainer(id)
                 .map(container -> container.getRootPaths().get(0))
                 .orElse(null);
+    }
+
+    public static boolean isVersionSatisfied(String modId, String require) {
+        return FabricLoader.getInstance().getModContainer(modId)
+                .map(container -> {
+                    Version currentVersion = container.getMetadata().getVersion();
+                    try {
+                        VersionPredicate predicate = VersionPredicate.parse(">=" + require);
+                        return predicate.test(currentVersion);
+                    } catch (VersionParsingException e) {
+                        return false;
+                    }
+                })
+                .orElse(false);
     }
 }

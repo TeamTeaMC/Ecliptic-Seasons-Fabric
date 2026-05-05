@@ -10,10 +10,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 
 public class EclipticSeasonsMixinPlugin implements IMixinConfigPlugin {
@@ -44,10 +41,11 @@ public class EclipticSeasonsMixinPlugin implements IMixinConfigPlugin {
             List<String> strings = Arrays.stream(sub.split("\\.")).toList();
             String modid = strings.get(0);
             if (strings.size() > 2) {
-                if (Platform.isModLoaded(strings.get(1)))
-                    shouldApply = false;
+                shouldApply = Platform.isModLoaded(strings.get(1)) && Platform.isModLoaded(strings.get(0));
             } else {
-                shouldApply = Platform.isModLoaded(modid);
+                shouldApply = Objects.equals(modid, "distanthorizons") ?
+                        Platform.isVersionSatisfied(modid, "3.0.0-b") :
+                        Platform.isModLoaded(modid);
             }
         }
         if (shouldApply && !PreloadedConfig.shouldApply(mixinClassName))

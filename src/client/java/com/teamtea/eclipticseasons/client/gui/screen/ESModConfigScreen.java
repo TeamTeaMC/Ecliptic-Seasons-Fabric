@@ -2,6 +2,7 @@ package com.teamtea.eclipticseasons.client.gui.screen;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.teamtea.eclipticseasons.EclipticSeasons;
 import com.teamtea.eclipticseasons.api.EclipticSeasonsApi;
 import com.teamtea.eclipticseasons.client.gui.screen.entry.base.CallbackEntry;
 import com.teamtea.eclipticseasons.client.gui.screen.entry.base.ConfigEntry;
@@ -14,6 +15,7 @@ import com.teamtea.eclipticseasons.config.CommonConfig;
 import com.teamtea.eclipticseasons.config.StartConfig;
 import com.teamtea.eclipticseasons.mixin.EclipticSeasonsMixinPlugin;
 import lombok.Getter;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -28,10 +30,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 // import net.neoforged.fml.ModContainer;
 // import net.neoforged.fml.ModList;
+import net.neoforged.fml.config.ConfigTracker;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.config.ModConfigs;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jspecify.annotations.NonNull;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -42,7 +49,7 @@ public class ESModConfigScreen extends Screen {
     // private ModContainer mod;
     @Getter
     private SuggestWidget globalSuggestWidget;
-
+    public boolean saveOnClose = true;
     public final Map<Object, Component> configTabs = new IdentityHashMap<>();
 
     public final Map<Component, Tab> tabs = new LinkedHashMap<>();
@@ -72,7 +79,9 @@ public class ESModConfigScreen extends Screen {
     @SuppressWarnings({"raw_use"})
     public ESModConfigScreen(Screen parent) {
         super(Component.literal("Ecliptic Seasons"));
+        initConfigCache();
         this.parent = parent;
+
 
         tabs.put(HOT, new Tab(HOT, new LinkedHashMap<>()));
         tabs.put(SEASON, new Tab(SEASON, new LinkedHashMap<>()));
@@ -157,9 +166,9 @@ public class ESModConfigScreen extends Screen {
 
             if (value instanceof Config nested) {
                 traverseConfig(nested, fullPath);
-            }else if (value instanceof Boolean bool) {
+            } else if (value instanceof Boolean bool) {
                 // System.out.println(fullPath + " = " + value);
-                addToTab(MIXINS,Component.literal(path), new SimpleBoolEntry(key, bool, b -> {
+                addToTab(MIXINS, Component.literal(path), new SimpleBoolEntry(key, bool, b -> {
                     config.set(key, b);
                 }));
             }
@@ -294,7 +303,7 @@ public class ESModConfigScreen extends Screen {
         LinearLayout subHeader = header.addChild(LinearLayout.horizontal()).spacing(TAB_SPACING);
 
         subHeader.addChild(Button.builder(Component.translatable("eclipticseasons.options.advance"), (button) -> {
-            ConfigurationScreen configurationScreen = new ConfigurationScreen(EclipticSeasonsApi.MODID, ESModConfigScreen.this);
+            ConfigurationScreen configurationScreen = new ConfigurationScreen(EclipticSeasonsApi.MODID, ESModConfigScreen.this.parent);
             Minecraft.getInstance().setScreen(configurationScreen);
         }).width(TAB_BUTTON_WIDTH).build());
 
@@ -362,7 +371,12 @@ public class ESModConfigScreen extends Screen {
 
         ScrollableLayout scrollableLayout = new ScrollableLayout(this.minecraft, gridLayout, this.layout.getContentHeight());
         layout.addToContents(scrollableLayout);
-        layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onClose()).width(200).build());
+        LinearLayout footer = layout.addToFooter(LinearLayout.horizontal()).spacing(TAB_SPACING);
+        footer.addChild(Button.builder(CommonComponents.GUI_BACK, (button) -> {
+            ESModConfigScreen.this.saveOnClose = false;
+            this.onClose();
+        }).width(buttonWidth).build());
+        footer.addChild(Button.builder(CommonComponents.GUI_DONE, (button) -> this.onClose()).width(buttonWidth).build());
         layout.visitWidgets(this::addRenderableWidget);
 
         this.addRenderableWidget(this.globalSuggestWidget);
@@ -389,9 +403,35 @@ public class ESModConfigScreen extends Screen {
         super.resize(width, height);
     }
 
+    protected Map<String, byte[]> configCache = new HashMap<>();
+
+    public void initConfigCache() {
+        for (ModConfig modConfig : ModConfigs.getModConfigs(EclipticSeasonsApi.MODID)) {
+            try {
+                configCache.put(modConfig.getFileName(), Files.readAllBytes(FabricLoader.getInstance().getConfigDir().resolve(modConfig.getFileName())));
+            } catch (IOException e) {
+                EclipticSeasons.logger(e);
+            }
+        }
+    }
+
+    public void backupConfigCache() {
+        for (Map.Entry<String, byte[]> entry : configCache.entrySet()) {
+            ModConfig modConfig = ModConfigs.getFileMap().get(entry.getKey());
+            if (modConfig != null) {
+                ConfigTracker.INSTANCE.acceptSyncedConfig(modConfig, entry.getValue());
+            }
+        }
+    }
+
     @Override
     public void onClose() {
         super.onClose();
+        if (!saveOnClose) {
+            backupConfigCache();
+            Objects.requireNonNull(this.minecraft).setScreen(this.parent);
+            return;
+        }
         CommonConfig.COMMON_CONFIG.save();
         ClientConfig.CLIENT_CONFIG.save();
         StartConfig.START_CONFIG.save();
