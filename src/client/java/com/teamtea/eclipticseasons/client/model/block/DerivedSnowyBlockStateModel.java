@@ -68,19 +68,22 @@ public class DerivedSnowyBlockStateModel implements NeoLikeBlockStateModel {
         }
 
         Map<Direction, List<BakedQuad>> map = new IdentityHashMap<>();
-        QuadCollection.Builder quadCollection = new QuadCollection.Builder();
+        // QuadCollection.Builder quadCollection = new QuadCollection.Builder();
+        List<BakedQuad> quadNew = new ArrayList<>();
         for (BlockStateModelPart object : parts) {
             for (Direction value : DIRECTIONS_TO_CHECK) {
                 List<BakedQuad> quads = object.getQuads(value);
                 if (quads.isEmpty()) continue;
-                for (BakedQuad quad : quads) {
-                    quadCollection = value == null ?
-                            quadCollection.addUnculledFace(quad) :
-                            quadCollection.addCulledFace(value, quad);
-                }
+                // for (BakedQuad quad : quads) {
+                //                 //     // quadCollection = value == null ?
+                //                 //     //         quadCollection.addUnculledFace(quad) :
+                //                 //     //         quadCollection.addCulledFace(value, quad);
+                //                 //     quadNew.add(quad);
+                //                 // }
+                quadNew.addAll(quads);
             }
         }
-        QuadCollection build = quadCollection.build();
+        // QuadCollection build = quadCollection.build();
 
         boolean tooTiny = false;
         Block block = state.getBlock();
@@ -107,7 +110,8 @@ public class DerivedSnowyBlockStateModel implements NeoLikeBlockStateModel {
         //     }
         // }
 
-        List<BakedQuad> quads = new ArrayList<>(build.getAll());
+        // List<BakedQuad> quads = new ArrayList<>(build.getAll());
+        List<BakedQuad> quads = quadNew;
         if (!tooTiny)
             quads = QuadFilter.fixQuadCTM(quads);
         map.put(Direction.UP, makeSnowyBakedQuads(bqr, quads, tooTiny));
@@ -117,7 +121,6 @@ public class DerivedSnowyBlockStateModel implements NeoLikeBlockStateModel {
         parts.add(part);
         bqr.reset();
     }
-
 
     public static List<BakedQuad> makeSnowyBakedQuads(ReUVBakedQuad bqr, List<BakedQuad> quadsCTM, boolean tooTiny) {
 
