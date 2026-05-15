@@ -1,6 +1,8 @@
 package com.teamtea.eclipticseasons.client.gui.screen.entry.base;
 
 import com.teamtea.eclipticseasons.client.gui.screen.ESModConfigScreen;
+import com.teamtea.eclipticseasons.config.sync.SyncType;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.ChatFormatting;
@@ -19,6 +21,10 @@ public class CallbackEntry extends ConfigEntry {
     @Accessors(chain = true)
     @Setter
     protected ModConfigSpec.RestartType restartType = ModConfigSpec.RestartType.NONE;
+    @Accessors(chain = true)
+    @Setter
+    @Getter
+    protected SyncType syncType = SyncType.COMMON;
     boolean nowValue;
 
     public CallbackEntry(String text, String hoveredText, BooleanSupplier base, CycleButton.OnValueChange<Boolean> consumer) {

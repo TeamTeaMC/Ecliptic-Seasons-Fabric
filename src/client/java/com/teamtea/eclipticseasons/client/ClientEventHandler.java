@@ -31,6 +31,7 @@ import com.teamtea.eclipticseasons.common.game.AnimalHooks;
 import com.teamtea.eclipticseasons.common.misc.MapExporter;
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
+import com.teamtea.eclipticseasons.config.sync.ESConfigSync;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -121,6 +122,7 @@ public final class ClientEventHandler {
             ESSortInfo.clearOnClientExitOrServerClose();
         }
 
+        ESConfigSync.INSTANCE.onClientPlayerExit();
         // ESConfigSync.INSTANCE.onClientPlayerExit();
     }
 

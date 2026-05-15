@@ -14,9 +14,13 @@ import com.teamtea.eclipticseasons.compat.CompatModule;
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
 import com.teamtea.eclipticseasons.config.StartConfig;
+import com.teamtea.eclipticseasons.config.sync.ESConfigSync;
+import com.teamtea.eclipticseasons.config.sync.ESConfigToServerPayload;
+import com.teamtea.eclipticseasons.config.sync.SyncType;
 import com.teamtea.eclipticseasons.mixin.EclipticSeasonsMixinPlugin;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import lombok.Getter;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -35,6 +39,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.Mth;
 // import net.neoforged.fml.ModContainer;
 // import net.neoforged.fml.ModList;
@@ -132,7 +137,7 @@ public class ESModConfigScreen extends Screen {
                 ClientConfig.Debug.debugInfo,
                 (bt, b) -> {
                     ClientConfig.Debug.debugInfo.set(b);
-                }));
+                }).setSyncType(SyncType.CLIENT));
 
         addToHotTab(new CallbackEntry(
                 "eclipticseasons.configuration.NaturalSound",
@@ -141,7 +146,8 @@ public class ESModConfigScreen extends Screen {
                 (bt, b) -> {
                     ClientConfig.Sound.naturalSound.set(b);
                     ClientConfig.Sound.naturalSound.clearCache();
-                }).setRestartType(ModConfigSpec.RestartType.WORLD));
+                }).setRestartType(ModConfigSpec.RestartType.WORLD)
+                .setSyncType(SyncType.CLIENT));
 
         addToHotTab(new CallbackEntry(
                 "eclipticseasons.configuration.ExtraSnowLayer",
@@ -149,7 +155,7 @@ public class ESModConfigScreen extends Screen {
                 ClientConfig.Renderer.extraSnowLayer,
                 (bt, b) -> {
                     ClientConfig.Renderer.extraSnowLayer.set(b);
-                }));
+                }).setSyncType(SyncType.CLIENT));
 
         addToHotTab(new CallbackEntry(
                 "eclipticseasons.configuration.ExtraSnowDefinitions",
@@ -158,7 +164,8 @@ public class ESModConfigScreen extends Screen {
                 (bt, b) -> {
                     StartConfig.Resource.extraSnow.set(b);
                     StartConfig.Resource.extraSnow.clearCache();
-                }).setRestartType(ModConfigSpec.RestartType.GAME));
+                }).setRestartType(ModConfigSpec.RestartType.GAME)
+                .setSyncType(SyncType.STARTUP));
 
         addToHotTab(new CallbackEntry(
                 "eclipticseasons.configuration.FrozenWater",
@@ -166,16 +173,8 @@ public class ESModConfigScreen extends Screen {
                 ClientConfig.Debug.frozenWater,
                 (bt, b) -> {
                     ClientConfig.Debug.frozenWater.set(b);
-                }));
-
-        addToHotTab(new CallbackEntry(
-                "eclipticseasons.configuration.SpringGrass",
-                "eclipticseasons.configuration.SpringGrass.tooltip",
-                CommonConfig.Resource.springGrass,
-                (bt, b) -> {
-                    CommonConfig.Resource.springGrass.set(b);
-                    CommonConfig.Resource.springGrass.clearCache();
-                }).setRestartType(ModConfigSpec.RestartType.GAME));
+                })
+                .setSyncType(SyncType.CLIENT));
 
 
         for (UnmodifiableConfig.Entry entry :
@@ -287,7 +286,8 @@ public class ESModConfigScreen extends Screen {
         );
 
         put(WEATHER,
-                CommonConfig.Weather.notRainInDesert
+                CommonConfig.Weather.notRainInDesert,
+                CommonConfig.Weather.rainChanceMultiplier
         );
 
         put(RENDER,
@@ -494,6 +494,7 @@ public class ESModConfigScreen extends Screen {
         boolean needGameRestart = false;
         boolean isChanged = false;
         boolean inGame = Minecraft.getInstance().level != null;
+        Set<SyncType> syncTypes = new HashSet<>();
         for (Map.Entry<Component, Tab> componentTabEntry : tabs.entrySet()) {
             for (Map.Entry<Component, List<ConfigEntry>> componentListEntry : componentTabEntry.getValue().configShown().entrySet()) {
                 for (ConfigEntry configEntry : componentListEntry.getValue()) {
@@ -504,19 +505,43 @@ public class ESModConfigScreen extends Screen {
                     if (valueChange && configEntry instanceof ConfigEntry.SpecEntry<?> specEntry) {
                         specEntry.getSpec().clearCache();
                     }
+                    if (valueChange) {
+                        syncTypes.add(configEntry.getSyncType());
+                    }
                     // if (needRestart) break;
                 }
             }
         }
 
         if (isChanged) {
-            CommonConfig.COMMON_CONFIG.save();
-            for (ModConfig modConfig : ModConfigs.getModConfigs(EclipticSeasonsApi.MODID)) {
-                // ESConfigSync.INSTANCE.notBackup(modConfig);
+            if (syncTypes.contains(SyncType.COMMON)) CommonConfig.COMMON_CONFIG.save();
+            List<ModConfig> modConfigNotBackup = ModConfigs.getModConfigs(EclipticSeasonsApi.MODID).stream().filter(m -> m.getType() != ModConfig.Type.CLIENT
+                    && syncTypes.contains(SyncType.of(m.getType()))).toList();
+            for (ModConfig modConfig : modConfigNotBackup) {
+                ESConfigSync.INSTANCE.notBackup(modConfig);
             }
-            ClientConfig.CLIENT_CONFIG.save();
-            StartConfig.START_CONFIG.save();
-            EclipticSeasonsMixinPlugin.PreloadedConfig.getConfig().save();
+            if (syncTypes.contains(SyncType.CLIENT)) ClientConfig.CLIENT_CONFIG.save();
+            if (syncTypes.contains(SyncType.STARTUP)) StartConfig.START_CONFIG.save();
+            if (syncTypes.contains(SyncType.MIXINS)) EclipticSeasonsMixinPlugin.PreloadedConfig.getConfig().save();
+
+            if (Minecraft.getInstance().getConnection() != null
+                    && !Minecraft.getInstance().isLocalServer()
+                    && Minecraft.getInstance().player.permissions().hasPermission(Permissions.COMMANDS_ADMIN)
+            ) {
+                try {
+                    for (ModConfig modConfig : modConfigNotBackup) {
+                        byte[] bytes = Files.readAllBytes(FabricLoader.getInstance().getConfigDir().resolve(modConfig.getFileName()));
+                        ClientPlayNetworking.send(new ESConfigToServerPayload(modConfig.getFileName(), needRestart, SyncType.of(modConfig.getType()), bytes));
+                    }
+
+                    if (syncTypes.contains(SyncType.MIXINS)) {
+                        byte[] bytes = Files.readAllBytes(FabricLoader.getInstance().getConfigDir().resolve(SyncType.MIXINS.configName(EclipticSeasonsApi.MODID)));
+                        ClientPlayNetworking.send(new ESConfigToServerPayload(SyncType.MIXINS.configName(EclipticSeasonsApi.MODID), true, SyncType.MIXINS, bytes));
+                    }
+                } catch (IOException e) {
+                    EclipticSeasons.logger(e);
+                }
+            }
         }
 
         if (needRestart || needGameRestart) {

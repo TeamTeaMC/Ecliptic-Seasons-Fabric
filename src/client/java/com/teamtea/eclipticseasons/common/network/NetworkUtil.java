@@ -16,6 +16,8 @@ import com.teamtea.eclipticseasons.common.core.map.BiomeHolder;
 import com.teamtea.eclipticseasons.common.network.message.*;
 import com.teamtea.eclipticseasons.common.registry.ESRegistries;
 import com.teamtea.eclipticseasons.config.ClientConfig;
+import com.teamtea.eclipticseasons.config.sync.ESConfigSync;
+import com.teamtea.eclipticseasons.config.sync.IESConfigMessage;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;

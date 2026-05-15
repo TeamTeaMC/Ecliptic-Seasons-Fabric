@@ -51,13 +51,7 @@ public class AllListener {
     // TagsUpdatedEvent invoke before ServerAboutToStartEvent
 
     public static void onTagsUpdatedEvent(TagsUpdatedEvent tagsUpdatedEvent) {
-        if (tagsUpdatedEvent.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
-            for (Block block : BuiltInRegistries.BLOCK) {
-                for (BlockState possibleState : block.getStateDefinition().getPossibleStates()) {
-                    possibleState.initCache();
-                }
-            }
-        }
+        NaturalPlantHandler.initCache(tagsUpdatedEvent.getLookupProvider(),tagsUpdatedEvent.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD);
         BiomeClimateManager.resetBiomeTemps(tagsUpdatedEvent.getLookupProvider(), tagsUpdatedEvent.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD);
         WeatherManager.informUpdateBiomes(tagsUpdatedEvent.getLookupProvider(), tagsUpdatedEvent.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD);
         CropInfoManager.init(tagsUpdatedEvent);

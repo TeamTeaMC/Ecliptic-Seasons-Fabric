@@ -14,6 +14,8 @@ import com.teamtea.eclipticseasons.compat.eclipticseasons_bundles.EclipticSeason
 import com.teamtea.eclipticseasons.config.ClientConfig;
 import com.teamtea.eclipticseasons.config.CommonConfig;
 import com.teamtea.eclipticseasons.config.StartConfig;
+import com.teamtea.eclipticseasons.config.sync.ESConfigFilePayload;
+import com.teamtea.eclipticseasons.config.sync.ESConfigSync;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -21,6 +23,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.resources.Identifier;
 
@@ -32,6 +36,7 @@ import warp.net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ladysnake.cca.api.v3.chunk.ChunkSyncCallback;
+import warp.net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.List;
 import java.util.Locale;
@@ -231,6 +236,20 @@ public class EclipticSeasons implements ModInitializer {
         // cca
         ChunkSyncCallback.EVENT.register((player, chunk) ->
                 AllListener.onChunkWatch(player.level(), chunk, chunk.getPos(), player));
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            ServerLifecycleHooks.SERVER = server;
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            ServerLifecycleHooks.SERVER = null;
+        });
+
+        ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
+            for (ESConfigFilePayload syncConfig : ESConfigSync.INSTANCE.syncConfigs(false)) {
+                ServerConfigurationNetworking.send(handler, syncConfig);
+            }
+        });
     }
 
     private static void fireTagUpdated(MinecraftServer server) {

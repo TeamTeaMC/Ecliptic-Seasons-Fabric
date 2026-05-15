@@ -47,6 +47,7 @@ public class IceKeeper {
             BlockPos above = blockPos.above();
             if (ClientConfig.Debug.frozenWaterCheckLight.get() && !AttachRenderDispatcher.notTooBright(level, null, blockPos))
                 return;
+            if (!level.getBlockState(blockPos).getFluidState().isSource()) return;
             ICE_SHOULD_BE_IGNORED.add(blockPos.asLong());
             try {
                 WorldRenderer.setSectionDirtyWithNeighbors(SectionPos.of(player));

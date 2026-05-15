@@ -1,0 +1,25 @@
+package com.teamtea.eclipticseasons.config.sync;
+
+import com.teamtea.eclipticseasons.api.EclipticSeasonsApi;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
+
+public record ESConfigFilePayload(String fileName, byte[] contents) implements CustomPacketPayload, IESConfigMessage {
+    public static final Type<ESConfigFilePayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(EclipticSeasonsApi.MODID, "config_file"));
+
+    public static final StreamCodec<FriendlyByteBuf, ESConfigFilePayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8,
+            ESConfigFilePayload::fileName,
+            ByteBufCodecs.BYTE_ARRAY,
+            ESConfigFilePayload::contents,
+            ESConfigFilePayload::new);
+
+    @Override
+    public @NonNull Type<ESConfigFilePayload> type() {
+        return TYPE;
+    }
+}

@@ -1,6 +1,10 @@
 package com.teamtea.eclipticseasons.common.network;
 
 import com.teamtea.eclipticseasons.common.network.message.*;
+import com.teamtea.eclipticseasons.config.sync.ESConfigFilePayload;
+import com.teamtea.eclipticseasons.config.sync.ESConfigSync;
+import com.teamtea.eclipticseasons.config.sync.ESConfigToClientPayload;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class SimpleNetworkHandlerClient {
@@ -32,6 +36,26 @@ public class SimpleNetworkHandlerClient {
         ClientPlayNetworking.registerGlobalReceiver(UpdateTempChangeMessage.TYPE, (payload, context) -> {
             context.client().execute(() -> NetworkUtil.processUpdateTempChangeMessage(payload, context));
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                ESConfigToClientPayload.TYPE,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        ESConfigSync.INSTANCE.receiveSyncedConfig(payload.contents(), payload.fileName());
+                    });
+                }
+        );
+
+        ClientConfigurationNetworking.registerGlobalReceiver(
+                ESConfigFilePayload.TYPE,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        ESConfigSync.INSTANCE.receiveSyncedConfig(payload.contents(), payload.fileName());
+                    });
+                }
+        );
+
+
     }
 
 }
