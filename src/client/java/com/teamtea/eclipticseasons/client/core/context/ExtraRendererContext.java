@@ -1,6 +1,6 @@
 package com.teamtea.eclipticseasons.client.core.context;
 
-import com.teamtea.eclipticseasons.api.misc.client.IAttachRendererContextOwner;
+import com.teamtea.eclipticseasons.api.misc.client.IExtraRendererContextOwner;
 import com.teamtea.eclipticseasons.client.model.block.ISnowyReplaceModel;
 import com.teamtea.eclipticseasons.client.model.block.NeoLikeBlockStateModel;
 import com.teamtea.eclipticseasons.common.core.map.MapChecker;
@@ -17,20 +17,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
  *
- * Get from {@link  IAttachRendererContextOwner#of(Object)}.
+ * Get from {@link  IExtraRendererContextOwner#of(Object)}.
  * <p> Object is usually a {@link  com.teamtea.eclipticseasons.api.misc.client.IMapSlice}.
  *
  **/
 @Data
 @Accessors(chain = true)
-public class AttachRendererContext {
+public class ExtraRendererContext {
 
     BlockStateModel originalModel = null;
     @NonNull
@@ -38,7 +36,7 @@ public class AttachRendererContext {
     BlockStateModel snowyModel = null;
     boolean replace = false;
 
-    public AttachRendererContext add(BlockStateModel model) {
+    public ExtraRendererContext add(BlockStateModel model) {
         if (model != null)
             this.extraModels.add(model);
         return this;
@@ -55,7 +53,7 @@ public class AttachRendererContext {
         return !extraModels.isEmpty();
     }
 
-    public AttachRendererContext apply(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
+    public ExtraRendererContext apply(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (this.shouldApply()) {
             if (this.isReplace()) parts.clear();
             List<BlockStateModel> extraModels = this.getExtraModels();
@@ -71,11 +69,11 @@ public class AttachRendererContext {
         return this.extraModels;
     }
 
-    public static final AttachRendererContext EMPTY = new AttachRendererContext();
+    public static final ExtraRendererContext EMPTY = new ExtraRendererContext();
 
 
     public static TriState getModelForAmbientOcclusion(Object context, BlockState state, ChunkSectionLayer renderType) {
-        AttachRendererContext rendererHolder = IAttachRendererContextOwner.of(context);
+        ExtraRendererContext rendererHolder = IExtraRendererContextOwner.of(context);
         if (rendererHolder.getExtraModels() instanceof ISnowyReplaceModel snowyBakedModelWrapper) {
             if (snowyBakedModelWrapper.getBindBlockType() == MapChecker.FLAG_CUSTOM_AO) {
                 return TriState.TRUE;

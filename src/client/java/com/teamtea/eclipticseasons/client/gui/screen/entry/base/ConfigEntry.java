@@ -1,5 +1,6 @@
 package com.teamtea.eclipticseasons.client.gui.screen.entry.base;
 
+import com.teamtea.eclipticseasons.EclipticSeasons;
 import com.teamtea.eclipticseasons.api.constant.solar.Season;
 import com.teamtea.eclipticseasons.client.gui.screen.ESModConfigScreen;
 import com.teamtea.eclipticseasons.client.gui.screen.entry.BoolEntry;
@@ -13,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +28,8 @@ import org.jspecify.annotations.NonNull;
 import java.util.Set;
 
 public abstract class ConfigEntry {
+    protected static final WidgetSprites CLIENT_SPRITES = new WidgetSprites(EclipticSeasons.rl("widget/es_button"), EclipticSeasons.rl("widget/es_button_disabled"), EclipticSeasons.rl("widget/es_button_highlighted"));
+
     protected final Component label;
 
     public ConfigEntry(String translationKey) {

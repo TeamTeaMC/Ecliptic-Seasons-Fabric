@@ -51,7 +51,13 @@ public class CallbackEntry extends ConfigEntry {
 
     @Override
     public AbstractWidget build(ESModConfigScreen screen, int x, int y, int width) {
-        CycleButton<Boolean> booleanCycleButton = CycleButton.onOffBuilder(nowValue)
+        CycleButton.Builder<Boolean> booleanBuilder = CycleButton.onOffBuilder(nowValue);
+        if (syncType == SyncType.CLIENT) {
+            booleanBuilder.withSprite(
+                    (cycleButton, aBoolean) ->
+                            CLIENT_SPRITES.get(cycleButton.isActive(), cycleButton.isHoveredOrFocused()));
+        }
+        CycleButton<Boolean> booleanCycleButton = booleanBuilder
                 .create(x, y, width, 20, this.label, (b, v) -> {
                     this.nowValue = v;
                     consumer.onValueChange(b, v);

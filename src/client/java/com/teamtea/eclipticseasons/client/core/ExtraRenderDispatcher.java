@@ -9,7 +9,7 @@ import com.teamtea.eclipticseasons.api.misc.client.IFakeSnowHolder;
 import com.teamtea.eclipticseasons.api.misc.client.IMapSlice;
 import com.teamtea.eclipticseasons.api.misc.client.IMapSliceProvider;
 import com.teamtea.eclipticseasons.api.util.EclipticUtil;
-import com.teamtea.eclipticseasons.client.core.context.AttachRendererContext;
+import com.teamtea.eclipticseasons.client.core.context.ExtraRendererContext;
 import com.teamtea.eclipticseasons.client.model.block.IESReplaceModel;
 import com.teamtea.eclipticseasons.client.model.block.ISnowyReplaceModel;
 import com.teamtea.eclipticseasons.client.model.block.ReplacingBlockStateModel;
@@ -48,10 +48,10 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static com.teamtea.eclipticseasons.client.core.AttachModelManager.isModelReplaceable;
+import static com.teamtea.eclipticseasons.client.core.ExtraModelManager.isModelReplaceable;
 
 
-public class AttachRenderDispatcher {
+public class ExtraRenderDispatcher {
 
 
     public static BlockPos.MutableBlockPos posToMutable(BlockPos pos) {
@@ -59,8 +59,8 @@ public class AttachRenderDispatcher {
         // return new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public static AttachRendererContext findModel(
-            @NonNull AttachRendererContext context,
+    public static ExtraRendererContext findModel(
+            @NonNull ExtraRendererContext context,
             @NonNull IMapSlice mapSlice,
             BlockPos pos,
             BlockState state,
@@ -209,7 +209,7 @@ public class AttachRenderDispatcher {
                     } else if (leaveLike && !specialLeaves) {
                         snowState = BlockRegistry.snowyLeaves.defaultBlockState();
                     }
-                    BlockStateModel snowModel = AttachModelManager.getSnowyModel(state, snowState, flag, offset);
+                    BlockStateModel snowModel = ExtraModelManager.getSnowyModel(state, snowState, flag, offset);
 
                     if (snowModel != null) {
                         first = snowModel;
@@ -257,7 +257,7 @@ public class AttachRenderDispatcher {
                 }
                 if (index > -1) {
                     index = indexs[index];
-                    first = getModel(AttachModelManager.snow_edge_overlays.get(index));
+                    first = getModel(ExtraModelManager.snow_edge_overlays.get(index));
                     isSnowy = true;
                 }
             }
@@ -282,7 +282,7 @@ public class AttachRenderDispatcher {
                                             flatSlice.mid() :
                                             Mth.abs(((int) (seed + pos.getX()))) % 100 > ClientCon.progress ?
                                                     flatSlice.transitionModels().getFirst() : flatSlice.transitionModels().getSecond();
-                                    ModelResolver smr = AttachModelManager.extraSnowModelBuilds.get(cinfo);
+                                    ModelResolver smr = ExtraModelManager.extraSnowModelBuilds.get(cinfo);
                                     if (smr != null) {
                                         var mmrl = smr.tryFind(state);
                                         if (mmrl != null) {
@@ -370,7 +370,7 @@ public class AttachRenderDispatcher {
     }
 
     private static @Nullable BlockStateModel getModel(StandaloneModelKey<BlockStateModel> index) {
-        return AttachModelManager.getExtraModel(index);
+        return ExtraModelManager.getExtraModel(index);
     }
 
     private static final Direction[] SNOW_LAYER_DIRECTIONS_TO_CHECK = {
@@ -397,7 +397,7 @@ public class AttachRenderDispatcher {
             BlockAndTintGetter blockAndTintGetter, BlockPos pos, BlockState state,
             BlockPos.@Nullable  MutableBlockPos checkPos) {
         int layers = getRenderedLevelWithSnowInside(blockAndTintGetter, pos, state, checkPos);
-        return layers > 0 ? AttachModelManager.getSnowLayerModel(layers) : null;
+        return layers > 0 ? ExtraModelManager.getSnowLayerModel(layers) : null;
     }
 
     public static int getRenderedLevelWithSnowInside(
@@ -657,7 +657,7 @@ public class AttachRenderDispatcher {
 
 
         boolean isLight = false;
-        if (checkPos == null) checkPos = AttachModelManager.posToMutable(pos);
+        if (checkPos == null) checkPos = ExtraModelManager.posToMutable(pos);
         else checkPos.set(pos.getX(), pos.getY(), pos.getZ());
 
         if (ClientConfig.Renderer.useVanillaCheck.get()) {

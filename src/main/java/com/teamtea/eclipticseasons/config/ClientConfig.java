@@ -31,7 +31,7 @@ public class ClientConfig {
         public static ModConfigSpec.BooleanValue frozenWater;
         public static ModConfigSpec.BooleanValue frozenWaterBreakable;
         public static ModConfigSpec.BooleanValue frozenWaterCheckLight;
-        public static ModConfigSpec.BooleanValue fogWeather;
+        // public static ModConfigSpec.BooleanValue fogWeather;
 
         private static void load(ModConfigSpec.Builder builder) {
             builder.push("Debug");
@@ -50,8 +50,8 @@ public class ClientConfig {
             frozenWaterCheckLight = builder.comment("Prevents the visual frozen water effect in areas with high light levels.")
                     .define("FrozenWaterCheckLight", true);
 
-            fogWeather = builder.comment("Experimental: Adds a cinematic fog effect during rainfall.")
-                    .define("FoggyWeather", false);
+            // fogWeather = builder.comment("Experimental: Adds a cinematic fog effect during rainfall.")
+            //         .define("FoggyWeather", false);
 
             builder.pop();
         }
@@ -240,14 +240,14 @@ public class ClientConfig {
     }
 
     public static class Weather {
-        public static ModConfigSpec.DoubleValue weatherTransitionSpeed;
+        // public static ModConfigSpec.DoubleValue weatherTransitionSpeed;
 
         private static void load(ModConfigSpec.Builder builder) {
             builder.push("Weather");
 
-            weatherTransitionSpeed = builder.comment(
-                            "How quickly local weather conditions change. Higher values mean faster shifts.")
-                    .defineInRange("WeatherTransitionSpeed", 0.008d, 0.0008d, 0.08d);
+            // weatherTransitionSpeed = builder.comment(
+            //                 "How quickly local weather conditions change. Higher values mean faster shifts.")
+            //         .defineInRange("WeatherTransitionSpeed", 0.008d, 0.0008d, 0.08d);
 
             builder.pop();
         }

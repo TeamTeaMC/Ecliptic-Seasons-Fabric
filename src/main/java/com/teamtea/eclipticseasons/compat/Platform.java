@@ -14,7 +14,8 @@ import java.util.Optional;
 public class Platform {
 
     public static boolean isModLoaded(String id) {
-        return FabricLoader.getInstance().isModLoaded(id);
+        return FabricLoader.getInstance().isModLoaded(id)
+                || FabricLoader.getInstance().isModLoaded(id.replaceAll("_","-"));
     }
 
     public static boolean isModsLoaded(List<String> ids) {

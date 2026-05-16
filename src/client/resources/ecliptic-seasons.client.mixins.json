@@ -18,11 +18,11 @@
     "client.chunk.MixinModelBlockRenderer",
     "client.chunk.MixinRenderChunkRegion_IMapSlice",
     "client.chunk.MixinSectionCompiler",
-    "client.particle.MixinFallingDustParticleProvider",
     "client.gui.MixinGui",
     "client.model.MixinModelBakery",
     "client.model.MixinModelManager",
     "client.model.MixinTextureAtlasSprite",
+    "client.particle.MixinFallingDustParticleProvider",
     "client.sound.MixinMusicManager",
     "compat.distanthorizons.MixinAbstractDhTintGetter",
     "compat.distanthorizons.MixinClientLevel",
@@ -48,7 +48,8 @@
     "compat.voxy.MixinVoxelIngestService",
     "compat.voxy.MixinWorldConversionFactory",
     "compat.voxy.MixinWorldImporter",
-    "compat.voxy.MixinWorldUpdater"
+    "compat.voxy.MixinWorldUpdater",
+    "compat.fabric_renderer_indigo.MixinModelBlockRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

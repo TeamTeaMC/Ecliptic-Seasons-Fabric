@@ -6,13 +6,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import com.teamtea.eclipticseasons.api.misc.client.IAttachRendererContextOwner;
+import com.teamtea.eclipticseasons.api.misc.client.IExtraRendererContextOwner;
 import com.teamtea.eclipticseasons.api.misc.client.IMapSlice;
 import com.teamtea.eclipticseasons.api.misc.client.ISpriteChecker;
-import com.teamtea.eclipticseasons.client.core.AttachModelManager;
-import com.teamtea.eclipticseasons.client.core.AttachRenderDispatcher;
-import com.teamtea.eclipticseasons.client.core.context.AttachRendererContext;
-import com.teamtea.eclipticseasons.common.core.map.MapChecker;
+import com.teamtea.eclipticseasons.client.core.ExtraModelManager;
+import com.teamtea.eclipticseasons.client.core.ExtraRenderDispatcher;
+import com.teamtea.eclipticseasons.client.core.context.ExtraRendererContext;
 import com.teamtea.eclipticseasons.compat.sodium.SodiumBoard;
 import com.teamtea.eclipticseasons.compat.sodium.SodiumStatus;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
@@ -92,16 +91,16 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
             Operation<Void> original
     ) {
 
-        AttachRendererContext attachRendererContext = IAttachRendererContextOwner.of(slice);
+        ExtraRendererContext extraRendererContext = IExtraRendererContextOwner.of(slice);
 
-        if (!eclipticseasons$shouldReplaceOriginalGrassModel || attachRendererContext.shouldApply())
+        if (!eclipticseasons$shouldReplaceOriginalGrassModel || extraRendererContext.shouldApply())
             original.call(instance, blockStateModel, directionPredicate, mutableQuadView, randomSource, blockAndTintGetter, blockPos, blockState, bufferer);
 
-        if (attachRendererContext.shouldApply()) {
+        if (extraRendererContext.shouldApply()) {
             eclipticseasons$cancelDowngradedPass = true;
             eclipticseasons$shouldCollectBakeQuads = false;
 
-            for (BlockStateModel stateModel : attachRendererContext.cycle()) {
+            for (BlockStateModel stateModel : extraRendererContext.cycle()) {
                 original.call(instance, stateModel, directionPredicate, mutableQuadView, randomSource, blockAndTintGetter, blockPos, blockState, bufferer);
             }
         }
@@ -123,15 +122,15 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
     )
     private void eclipticseasons$renderModel_start(BlockStateModel model, BlockState state, BlockPos pos, BlockPos origin, CallbackInfo ci) {
         // this.allowDowngrade = false;
-        AttachRendererContext attachRendererContext = IAttachRendererContextOwner.of(slice);
-        AttachRenderDispatcher.findModel
-                (attachRendererContext,
+        ExtraRendererContext extraRendererContext = IExtraRendererContextOwner.of(slice);
+        ExtraRenderDispatcher.findModel
+                (extraRendererContext,
                         (IMapSlice) (Object) slice, pos, state, random, state.getSeed(pos), eclipticseasons$mutableBlockPos, null);
 
-        if (attachRendererContext.shouldApply()) {
-            eclipticseasons$shouldReplaceOriginalGrassModel = attachRendererContext.isReplace();
+        if (extraRendererContext.shouldApply()) {
+            eclipticseasons$shouldReplaceOriginalGrassModel = extraRendererContext.isReplace();
             if (!eclipticseasons$shouldReplaceOriginalGrassModel) {
-                boolean ctmBlock = AttachModelManager.isSpecialCTMBlock(state);
+                boolean ctmBlock = ExtraModelManager.isSpecialCTMBlock(state);
                 if (ctmBlock) {
                     eclipticseasons$shouldCollectBakeQuads = true;
                 }
@@ -141,7 +140,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
             eclipticseasons$shouldCollectBakeQuads = false;
         }
 
-        attachRendererContext
+        extraRendererContext
                 // .setModelData(ModelData.EMPTY)
                 .setOriginalModel(model)
         // .setExtraModels(eclipticseasons$snowModel)
@@ -160,7 +159,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
     )
     private void eclipticseasons$renderModel_useAmbientOcclusion(BlockStateModel model, BlockState state, BlockPos pos, BlockPos origin, CallbackInfo ci) {
         TriState modelForAmbientOcclusion =
-                AttachRendererContext.
+                ExtraRendererContext.
                         getModelForAmbientOcclusion(slice, state,ChunkSectionLayer.CUTOUT);
         if (modelForAmbientOcclusion != null && modelForAmbientOcclusion.toBoolean(true)) {
             prepareAoInfo(true);
@@ -179,7 +178,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
         eclipticseasons$shouldCollectBakeQuads = false;
         eclipticseasons$cancelDowngradedPass = false;
 
-        IAttachRendererContextOwner.of(slice).resetAll();
+        IExtraRendererContextOwner.of(slice).resetAll();
     }
 
     @Inject(
@@ -229,7 +228,7 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
 
     @Override
     public BlockStateModel getSnowModel() {
-        return IAttachRendererContextOwner.of(slice).getSnowyModel();
+        return IExtraRendererContextOwner.of(slice).getSnowyModel();
     }
 
     @Override
