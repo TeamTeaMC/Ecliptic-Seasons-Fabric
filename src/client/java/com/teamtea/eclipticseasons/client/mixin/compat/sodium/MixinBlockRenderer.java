@@ -188,6 +188,8 @@ public abstract class MixinBlockRenderer extends AbstractBlockRenderContext impl
     private void eclipticseasons$processQuad_cacheQuad(MutableQuadViewImpl quad, CallbackInfo ci) {
         if (eclipticseasons$shouldCollectBakeQuads) {
             TextureAtlasSprite sprite = quad.sprite(SpriteFinderCache.forBlockAtlas());
+            // quad.toVanilla();
+            // BakedQuad bakedQuad = new BakedQuad();
             // if( SpriteUtil.INSTANCE.hasAnimation(sprite))
             // SpriteUtil.INSTANCE.markSpriteActive(sprite);
             // Todo
